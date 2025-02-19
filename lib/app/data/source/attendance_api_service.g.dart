@@ -21,13 +21,13 @@ class _AttendanceApiService implements AttendanceApiService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<DataState<dynamic>>> getAttendanceToday() async {
+  Future<HttpResponse<BaseResponse>> getAttendanceToday() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<DataState<dynamic>>>(Options(
+        _setStreamType<HttpResponse<BaseResponse>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -43,13 +43,13 @@ class _AttendanceApiService implements AttendanceApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final _value = DataState<dynamic>.fromJson(_result.data!);
+    final _value = BaseResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<DataState<dynamic>>> sendAttendance(
+  Future<HttpResponse<BaseResponse>> sendAttendance(
       {required Map<String, dynamic> body}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -57,7 +57,7 @@ class _AttendanceApiService implements AttendanceApiService {
     final _data = <String, dynamic>{};
     _data.addAll(body);
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<DataState<dynamic>>>(Options(
+        _setStreamType<HttpResponse<BaseResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -73,13 +73,13 @@ class _AttendanceApiService implements AttendanceApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final _value = DataState<dynamic>.fromJson(_result.data!);
+    final _value = BaseResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<DataState<dynamic>>> getAttendanceByMonthYear({
+  Future<HttpResponse<BaseResponse>> getAttendanceByMonthYear({
     required String month,
     required String year,
   }) async {
@@ -88,7 +88,7 @@ class _AttendanceApiService implements AttendanceApiService {
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<DataState<dynamic>>>(Options(
+        _setStreamType<HttpResponse<BaseResponse>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -104,7 +104,7 @@ class _AttendanceApiService implements AttendanceApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final _value = DataState<dynamic>.fromJson(_result.data!);
+    final _value = BaseResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }

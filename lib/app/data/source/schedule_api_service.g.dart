@@ -21,13 +21,13 @@ class _ScheduleApiService implements ScheduleApiService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<DataState<dynamic>>> get() async {
+  Future<HttpResponse<BaseResponse>> get() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<DataState<dynamic>>>(Options(
+        _setStreamType<HttpResponse<BaseResponse>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -43,19 +43,19 @@ class _ScheduleApiService implements ScheduleApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final _value = DataState<dynamic>.fromJson(_result.data!);
+    final _value = BaseResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<DataState<dynamic>>> banned() async {
+  Future<HttpResponse<BaseResponse>> banned() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<DataState<dynamic>>>(Options(
+        _setStreamType<HttpResponse<BaseResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -71,7 +71,7 @@ class _ScheduleApiService implements ScheduleApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final _value = DataState<dynamic>.fromJson(_result.data!);
+    final _value = BaseResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }

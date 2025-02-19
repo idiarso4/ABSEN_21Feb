@@ -21,11 +21,16 @@ class FaceRecognitionNotifier extends AppProvider {
   Image? get currentImage => _currentImage;
   double get percentMatch => _percentMatch;
 
+  String? _errorMessage;
+
+  @override
+  String? get errorMessage => _errorMessage;
+
   @override
   void init() async {
     await _faceSDK.initialize(config: null);
     await _getBasePhoto();
-    if (errorMessage.isEmpty) getCurrentPhoto();
+    if (errorMessage == null || errorMessage!.isEmpty) getCurrentPhoto();
   }
 
   _getBasePhoto() async {
@@ -34,7 +39,7 @@ class FaceRecognitionNotifier extends AppProvider {
     if (response.success) {
       _setImage(response.data!, ImageType.PRINTED, 1);
     } else {
-      errorMeesage = response.message;
+      _errorMessage = response.message ?? 'Unknown error';
     }
     hideLoading();
   }

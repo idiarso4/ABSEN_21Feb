@@ -14,7 +14,7 @@ import 'package:absen_smkn1_punggelan/core/widget/app_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:absen_smkn1_punggelan/app/module/entity/quote.dart';
 
-class HomeScreen extends AppWidget<HomeNotifier, void, void> {
+class HomeScreen extends AppWidget<HomeNotifier> {
   final Color primaryOrange = Color.fromRGBO(243, 154, 0, 0.988);
   final Color secondaryOrange = Color.fromRGBO(255, 167, 38, 1);
   final Color bgLight = Colors.white;
@@ -623,7 +623,7 @@ class HomeScreen extends AppWidget<HomeNotifier, void, void> {
 
   _onSaveEditNotification(BuildContext context, int param) {
     Navigator.pop(context);
-    notifier.saveNotificationSetting(param);
+    notifier.saveNotificationSetting(param == 1);
   }
 
   _onPressProfile(BuildContext context) {

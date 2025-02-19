@@ -8,7 +8,7 @@ import 'package:flutter/src/material/app_bar.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 class DetailAttendanceScreen
-    extends AppWidget<DetailAttendanceNotifier, void, void> {
+    extends AppWidgetParam<DetailAttendanceNotifier, void, void> {
   DetailAttendanceScreen({Key? key}) : super(key: key);
   @override
   AppBar? appBarBuild(BuildContext context) {

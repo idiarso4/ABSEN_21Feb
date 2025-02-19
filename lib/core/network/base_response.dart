@@ -1,11 +1,19 @@
-abstract class BaseResponse {
-  final bool _success;
-  final String _message;
+class BaseResponse {
+  final bool success;
+  final String? message;
+  final dynamic data;
 
-  bool get success => _success;
-  String get message => _message;
+  const BaseResponse({
+    required this.success,
+    this.message,
+    this.data,
+  });
 
-  BaseResponse({required bool success, required String message})
-      : _success = success,
-        _message = message;
+  factory BaseResponse.fromJson(Map<String, dynamic> json) {
+    return BaseResponse(
+      success: json['success'] ?? false,
+      message: json['message'] as String?,
+      data: json['data'],
+    );
+  }
 }

@@ -167,11 +167,11 @@ class HomeNotifier extends AppProvider {
       final result = await _attendanceGetTodayUseCase.call();
       if (!isClosed) {
         result.fold(
-          (failure) {
-            errorMessage = failure.message;
-          },
-          (data) {
+          onSuccess: (data) {
             _attendanceToday = data;
+          },
+          onError: (message) {
+            errorMessage = message ?? 'Unknown error';
           },
         );
       }
@@ -187,11 +187,11 @@ class HomeNotifier extends AppProvider {
       final result = await _attendanceGetMonthUseCase.call();
       if (!isClosed) {
         result.fold(
-          (failure) {
-            errorMessage = failure.message;
+          onSuccess: (data) {
+            _listAttendanceThisMonth = data ?? [];
           },
-          (data) {
-            _listAttendanceThisMonth = data;
+          onError: (message) {
+            errorMessage = message ?? 'Unknown error';
           },
         );
       }
@@ -208,11 +208,11 @@ class HomeNotifier extends AppProvider {
       final result = await _scheduleGetUseCase.call();
       if (!isClosed) {
         result.fold(
-          (failure) {
-            errorMessage = failure.message;
-          },
-          (data) {
+          onSuccess: (data) {
             _schedule = data;
+          },
+          onError: (message) {
+            errorMessage = message ?? 'Unknown error';
           },
         );
       }
@@ -237,5 +237,11 @@ class HomeNotifier extends AppProvider {
     } catch (e) {
       rethrow;
     }
+  }
+
+  // TODO: Implement notification settings later
+  Future<void> saveNotificationSetting(bool enabled) async {
+    // Implementation will be added later
+    notifyListeners();
   }
 }

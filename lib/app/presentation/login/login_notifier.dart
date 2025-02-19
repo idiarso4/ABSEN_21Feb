@@ -16,11 +16,15 @@ class LoginNotifier extends AppProvider {
   bool _isShowPassword = false;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  String? _errorMessage;
 
   bool get isLoged => _isLoged;
   bool get isShowPassword => _isShowPassword;
   TextEditingController get emailController => _emailController;
   TextEditingController get passwordController => _passwordController;
+
+  @override
+  String? get errorMessage => _errorMessage;
 
   set isShowPassword(bool param) {
     _isShowPassword = param;
@@ -45,23 +49,18 @@ class LoginNotifier extends AppProvider {
         email: _emailController.text, password: _passwordController.text);
     final response = await _authLoginUseCase(param: param);
     if (response.success) {
-      // Save auth token
-      await SharedPreferencesHelper.setString(PREF_AUTH, response.data.token);
-      
-      // Save user data
-      await SharedPreferencesHelper.setString('name', response.data.name);
-      await SharedPreferencesHelper.setString('email', response.data.email);
-      await SharedPreferencesHelper.setString('role', response.data.role);
-      await SharedPreferencesHelper.setString('phone', response.data.phone ?? '-');
-      await SharedPreferencesHelper.setString('nip', response.data.nip ?? '-');
-      await SharedPreferencesHelper.setString('address', response.data.address ?? '-');
-      await SharedPreferencesHelper.setString('profile_picture', response.data.profilePicture ?? '');
-      
       _isLoged = true;
     } else {
-      snackbarMessage = response.message;
+      _errorMessage = response.message ?? 'Unknown error';
     }
-    _checkAuth();
     hideLoading();
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }

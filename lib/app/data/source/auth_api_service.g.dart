@@ -21,7 +21,7 @@ class _AuthApiService implements AuthApiService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<DataState<dynamic>>> login(
+  Future<HttpResponse<BaseResponse>> login(
       {required Map<String, dynamic> body}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -29,7 +29,7 @@ class _AuthApiService implements AuthApiService {
     final _data = <String, dynamic>{};
     _data.addAll(body);
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<DataState<dynamic>>>(Options(
+        _setStreamType<HttpResponse<BaseResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -45,7 +45,7 @@ class _AuthApiService implements AuthApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final _value = DataState<dynamic>.fromJson(_result.data!);
+    final _value = BaseResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }

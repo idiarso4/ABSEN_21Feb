@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 class FaceRecognitionScreen
-    extends AppWidget<FaceRecognitionNotifier, void, void> {
+    extends AppWidgetParam<FaceRecognitionNotifier, void, void> {
   @override
   void checkVariableAfterUi(BuildContext context) {
     if (notifier.percentMatch >= 70) {
