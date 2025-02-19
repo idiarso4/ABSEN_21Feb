@@ -10,7 +10,7 @@ import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 class MapScreen extends AppWidget<MapNotifier, void, void> {
   @override
   void checkVariableBeforeUi(BuildContext context) {
-    if (!notifier.isGrantedLocaiton) {
+    if (!notifier.isGrantedLocation) {
       alternatifErrorButton = FilledButton(
           onPressed: () async {
             await LocationHelper.showDialogLocationPermission(context);

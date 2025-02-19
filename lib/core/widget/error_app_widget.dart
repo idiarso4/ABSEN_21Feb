@@ -2,14 +2,16 @@ import 'package:absen_smkn1_punggelan/core/helper/global_helper.dart';
 import 'package:flutter/material.dart';
 
 class ErrorAppWidget extends StatelessWidget {
-  final String description;
-  final void Function() onPressDefaultButton;
+  final String message;
+  final void Function() onRetry;
   final FilledButton? alternatifButton;
-  const ErrorAppWidget(
-      {super.key,
-      required this.description,
-      required this.onPressDefaultButton,
-      this.alternatifButton});
+
+  const ErrorAppWidget({
+    super.key,
+    required this.message,
+    required this.onRetry,
+    this.alternatifButton,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,26 +20,27 @@ class ErrorAppWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.error,
             size: 100,
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Text(
-            description,
+            message,
             style: GlobalHelper.getTextStyle(context,
                 appTextStyle: AppTextStyle.HEADLINE_SMALL),
           ),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
           alternatifButton ??
               FilledButton.icon(
-                  onPressed: onPressDefaultButton,
-                  icon: Icon(Icons.refresh),
-                  label: Text("Refresh"))
+                onPressed: onRetry,
+                icon: const Icon(Icons.refresh),
+                label: const Text("Refresh"),
+              ),
         ],
       ),
     );

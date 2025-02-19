@@ -1,203 +1,241 @@
-import 'dart:io';
-
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:absen_smkn1_punggelan/app/module/entity/attendance.dart';
-import 'package:absen_smkn1_punggelan/app/module/entity/schedule.dart';
-import 'package:absen_smkn1_punggelan/app/module/use_case/attendance_get_this_month.dart';
-import 'package:absen_smkn1_punggelan/app/module/use_case/attendance_get_today.dart';
-import 'package:absen_smkn1_punggelan/app/module/use_case/schedule_banned.dart';
-import 'package:absen_smkn1_punggelan/app/module/use_case/schedule_get.dart';
-import 'package:absen_smkn1_punggelan/core/constant/constant.dart';
-import 'package:absen_smkn1_punggelan/core/helper/date_time_helper.dart';
-import 'package:absen_smkn1_punggelan/core/helper/notification_helper.dart';
-import 'package:absen_smkn1_punggelan/core/helper/shared_preferences_helper.dart';
-import 'package:absen_smkn1_punggelan/core/provider/app_provider.dart';
+import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import '../../../core/helper/notification_helper.dart';
+import '../../../core/helper/shared_preferences_helper.dart';
+import '../../../core/network/data_state.dart';
+import '../../../core/provider/app_provider.dart';
+import '../../module/entity/attendance.dart';
+import '../../module/entity/schedule.dart';
+import '../../module/usecase/attendance_get_month_usecase.dart';
+import '../../module/usecase/attendance_get_today_usecase.dart';
+import '../../module/usecase/schedule_banned_usecase.dart';
+import '../../module/usecase/schedule_get_usecase.dart';
+import '../../../core/utils/constants.dart';
 
 class HomeNotifier extends AppProvider {
+  bool _disposed = false;
+  Timer? _timer;
+  bool get isClosed => _disposed;
+
   final AttendanceGetTodayUseCase _attendanceGetTodayUseCase;
   final AttendanceGetMonthUseCase _attendanceGetMonthUseCase;
   final ScheduleGetUseCase _scheduleGetUseCase;
   final ScheduleBannedUseCase _scheduleBannedUseCase;
 
-  HomeNotifier(this._attendanceGetTodayUseCase, this._attendanceGetMonthUseCase,
-      this._scheduleGetUseCase, this._scheduleBannedUseCase) {
-    init();
-  }
-  bool _isGrantedNotificationPresmission = false;
-  int _timeNotification = 5;
-  List<DropdownMenuEntry<int>> _listEditNotification = [
-    DropdownMenuEntry<int>(value: 5, label: '5 menit'),
-    DropdownMenuEntry<int>(value: 15, label: '15 menit'),
-    DropdownMenuEntry<int>(value: 30, label: '30 menit')
-  ];
-  String _name = '';
-  bool _isPhysicDevice = true;
-  AttendanceEntity? _attendanceToday;
-  List<AttendanceEntity> _listAttendanceThisMonth = [];
-  ScheduleEntity? _schedule;
-  bool _isLeaves = false;
-
-  int get timeNotification => _timeNotification;
-  bool get isGrantedNotificationPermission => _isGrantedNotificationPresmission;
-  List<DropdownMenuEntry<int>> get listEditNotification =>
-      _listEditNotification;
-  String get name => _name;
+  String? _name;
+  String get name => _name ?? '';
+  
+  bool _isPhysicDevice = false;
   bool get isPhysicDevice => _isPhysicDevice;
+
+  bool _isGrantedNotificationPresmission = false;
+  bool get isGrantedNotificationPresmission => _isGrantedNotificationPresmission;
+
+  int _timeNotification = 30;
+  int get timeNotification => _timeNotification;
+
+  AttendanceEntity? _attendanceToday;
   AttendanceEntity? get attendanceToday => _attendanceToday;
-  List<AttendanceEntity> get listAttendanceThisMonth =>
-      _listAttendanceThisMonth;
+
+  List<AttendanceEntity> _listAttendanceThisMonth = [];
+  List<AttendanceEntity> get listAttendanceThisMonth => _listAttendanceThisMonth;
+
+  ScheduleEntity? _schedule;
   ScheduleEntity? get schedule => _schedule;
+
+  bool _isLeaves = false;
   bool get isLeaves => _isLeaves;
 
-  @override
+  List<DropdownMenuEntry<int>> get listEditNotification => [
+    const DropdownMenuEntry(value: 5, label: '5 Minutes'),
+    const DropdownMenuEntry(value: 10, label: '10 Minutes'),
+    const DropdownMenuEntry(value: 15, label: '15 Minutes'),
+    const DropdownMenuEntry(value: 30, label: '30 Minutes'),
+  ];
+
+  HomeNotifier(
+    this._attendanceGetTodayUseCase,
+    this._attendanceGetMonthUseCase,
+    this._scheduleGetUseCase,
+    this._scheduleBannedUseCase,
+  );
+
+  @override 
+  void dispose() {
+    _disposed = true;
+    _timer?.cancel();
+    super.dispose();
+  }
+
   Future<void> init() async {
-    await _getUserDetail();
-    // await _getDeviceInfo();
-    await _getNotificationPermission();
-    if (errorMessage.isEmpty) await _getAttendanceToday();
-    if (errorMessage.isEmpty) await _getAttendanceThisMonth();
-    if (errorMessage.isEmpty) await _getSchedule();
-  }
-
-  _getUserDetail() async {
-    showLoading();
-    _name = await SharedPreferencesHelper.getString(PREF_NAME);
-    final pref_notif = await SharedPreferencesHelper.getInt(PREF_NOTIF_SETTING);
-    if (pref_notif != null) {
-      _timeNotification = pref_notif;
-    } else {
-      await SharedPreferencesHelper.setInt(
-          PREF_NOTIF_SETTING, _timeNotification);
-    }
-    hideLoading();
-  }
-
-  _getDeviceInfo() async {
-    showLoading();
-    if (Platform.isAndroid) {
-      final androidInfo = await DeviceInfoPlugin().androidInfo;
-      _isPhysicDevice = androidInfo.isPhysicalDevice;
-    } else if (Platform.isIOS) {
-      final iOSInfo = await DeviceInfoPlugin().iosInfo;
-      _isPhysicDevice = iOSInfo.isPhysicalDevice;
-    }
-
-    if (!_isPhysicDevice) _sendBanned();
-    hideLoading();
-  }
-
-  _getNotificationPermission() async {
-    _isGrantedNotificationPresmission =
-        await NotificationHelper.isPermissionGranted();
-    if (!_isGrantedNotificationPresmission) {
-      await NotificationHelper.requestPermission();
-      await Future.delayed(Duration(seconds: 5));
-      _getNotificationPermission();
-    }
-  }
-
-  _getAttendanceToday() async {
-    showLoading();
-    final response = await _attendanceGetTodayUseCase();
-    if (response.success) {
-      _attendanceToday = response.data;
-    } else {
-      errorMeesage = response.message;
-    }
-
-    hideLoading();
-  }
-
-  _getAttendanceThisMonth() async {
-    showLoading();
-    final response = await _attendanceGetMonthUseCase();
-    if (response.success) {
-      _listAttendanceThisMonth = response.data!;
-    } else {
-      errorMeesage = response.message;
-    }
-    hideLoading();
-  }
-
-  _getSchedule() async {
-    showLoading();
-    _isLeaves = false;
-    final response = await _scheduleGetUseCase();
-    if (response.success) {
-      if (response.data != null) {
-        _schedule = response.data!;
-        _setNotification();
-      } else {
-        _isLeaves = true;
-        snackbarMessage = response.message;
+    try {
+      if (isClosed) return;
+      
+      showLoading();
+      await _getUserDetail();
+      if (!isClosed) {
+        await _getDeviceInfo();
+        if (!isClosed) {
+          await _getNotificationPermission();
+          if (!isClosed) {
+            await _getAttendanceToday();
+            if (!isClosed) {
+              await _getAttendanceThisMonth();
+              if (!isClosed) {
+                await _getSchedule();
+              }
+            }
+          }
+        }
       }
-    } else {
-      errorMeesage = response.message;
+      if (!isClosed) hideLoading();
+    } catch (e) {
+      if (!isClosed) {
+        hideLoading();
+        errorMessage = e.toString();
+      }
     }
-    hideLoading();
   }
 
-  _sendBanned() async {
-    showLoading();
-    final response = await _scheduleBannedUseCase();
-    if (response.success) {
-      _getSchedule();
-    } else {
-      errorMeesage = response.message;
+  Future<void> _getUserDetail() async {
+    try {
+      if (isClosed) return;
+      
+      _name = await SharedPreferencesHelper.getString(Constants.PREF_NAME);
+      final prefNotif = await SharedPreferencesHelper.getInt(Constants.PREF_NOTIF_SETTING);
+      if (!isClosed) {
+        if (prefNotif != null) {
+          _timeNotification = prefNotif;
+        } else {
+          await SharedPreferencesHelper.setInt(
+              Constants.PREF_NOTIF_SETTING, _timeNotification);
+        }
+      }
+    } catch (e) {
+      rethrow;
     }
-    hideLoading();
   }
 
-  _setNotification() async {
-    showLoading();
-
-    await NotificationHelper.cancelAll();
-
-    final startShift =
-        await SharedPreferencesHelper.getString(PREF_START_SHIFT);
-    final endShift = await SharedPreferencesHelper.getString(PREF_END_SHIFT);
-    final prefTimeNotif =
-        await SharedPreferencesHelper.getInt(PREF_NOTIF_SETTING);
-
-    if (prefTimeNotif == null) {
-      SharedPreferencesHelper.setInt(PREF_NOTIF_SETTING, _timeNotification);
-    } else {
-      _timeNotification = prefTimeNotif;
+  Future<void> _getDeviceInfo() async {
+    try {
+      if (isClosed) return;
+      
+      final deviceInfo = await DeviceInfoPlugin().androidInfo;
+      if (!isClosed) {
+        _isPhysicDevice = deviceInfo.isPhysicalDevice ?? false;
+      }
+    } catch (e) {
+      rethrow;
     }
-
-    DateTime startShiftDateTime = DateTimeHelper.parseDateTime(
-        dateTimeString: startShift, format: 'HH:mm:ss');
-
-    DateTime endShiftDateTime = DateTimeHelper.parseDateTime(
-        dateTimeString: endShift, format: 'HH:mm:ss');
-
-    startShiftDateTime =
-        startShiftDateTime.subtract(Duration(minutes: _timeNotification));
-    endShiftDateTime =
-        endShiftDateTime.subtract(Duration(minutes: _timeNotification));
-
-    await NotificationHelper.scheduleNotification(
-        id: 'start'.hashCode,
-        title: 'Pengingat!',
-        body: 'Jangan lupa untuk buat kehadiran datang',
-        hour: startShiftDateTime.hour,
-        minutes: startShiftDateTime.minute);
-
-    await NotificationHelper.scheduleNotification(
-        id: 'end'.hashCode,
-        title: 'Pengingat!',
-        body: 'Jangan lupa untuk buat kehadiran pulang',
-        hour: endShiftDateTime.hour,
-        minutes: endShiftDateTime.minute);
-    hideLoading();
   }
 
-  saveNotificationSetting(int param) async {
-    showLoading();
-    await SharedPreferencesHelper.setInt(PREF_NOTIF_SETTING, param);
-    _timeNotification = param;
-    _setNotification();
-    hideLoading();
+  Future<void> _getNotificationPermission() async {
+    try {
+      if (isClosed) return;
+
+      if (await Permission.notification.isGranted) {
+        _isGrantedNotificationPresmission = true;
+      } else {
+        final status = await Permission.notification.status;
+        if (!isClosed) {
+          if (status.isPermanentlyDenied) {
+            openAppSettings();
+          }
+          _isGrantedNotificationPresmission = status.isGranted;
+        }
+      }
+    } catch (e) {
+      _isGrantedNotificationPresmission = false;
+      rethrow;
+    }
+  }
+
+  Future<void> _getAttendanceToday() async {
+    try {
+      if (isClosed) return;
+
+      if (_isGrantedNotificationPresmission && _schedule != null) {
+        await NotificationHelper.setScheduledNotification(
+          _timeNotification,
+          _schedule!,
+        );
+      }
+
+      final result = await _attendanceGetTodayUseCase.call();
+      if (!isClosed) {
+        result.fold(
+          (failure) {
+            errorMessage = failure.message;
+          },
+          (data) {
+            _attendanceToday = data;
+          },
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> _getAttendanceThisMonth() async {
+    try {
+      if (isClosed) return;
+
+      final result = await _attendanceGetMonthUseCase.call();
+      if (!isClosed) {
+        result.fold(
+          (failure) {
+            errorMessage = failure.message;
+          },
+          (data) {
+            _listAttendanceThisMonth = data;
+          },
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> _getSchedule() async {
+    try {
+      if (isClosed) return;
+
+      showLoading();
+      final result = await _scheduleGetUseCase.call();
+      if (!isClosed) {
+        result.fold(
+          (failure) {
+            errorMessage = failure.message;
+          },
+          (data) {
+            _schedule = data;
+          },
+        );
+      }
+    } catch (e) {
+      if (!isClosed) {
+        errorMessage = e.toString();
+      }
+    } finally {
+      if (!isClosed) hideLoading();
+    }
+  }
+
+  Future<void> setTimeNotification(int param) async {
+    try {
+      if (isClosed) return;
+
+      await SharedPreferencesHelper.setInt(Constants.PREF_NOTIF_SETTING, param);
+      if (!isClosed) {
+        _timeNotification = param;
+        notifyListeners();
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 }

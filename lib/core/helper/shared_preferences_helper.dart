@@ -50,4 +50,14 @@ class SharedPreferencesHelper {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('address');
   }
+
+  static Future<void> setEmail(String email) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', email);
+  }
+
+  static Future<void> setPhone(String phone) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('phone', phone);
+  }
 }

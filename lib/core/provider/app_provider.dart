@@ -11,7 +11,7 @@ abstract class AppProvider with ChangeNotifier {
   String get errorMessage => _errorMessage;
   String get snackbarMessage => _snackbarMessage;
 
-  set errorMeesage(String param) => _errorMessage = param;
+  set errorMessage(String param) => _errorMessage = param;
   set snackbarMessage(String param) => _snackbarMessage = param;
 
   void showLoading() {
@@ -24,7 +24,7 @@ abstract class AppProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void init();
+  void init() {} 
 
   @override
   void dispose() {

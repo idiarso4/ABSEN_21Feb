@@ -1,21 +1,26 @@
 import 'dart:io';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart';
 import 'package:timezone/data/latest.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import '../../app/module/entity/schedule.dart';
 
 class NotificationHelper {
   static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
   static Future<void> configurateLocalTimeZone() async {
+    if (kIsWeb) return; // Skip untuk web
+    
     initializeTimeZones();
     final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
     setLocalLocation(getLocation(currentTimeZone));
   }
 
   static initNotification() async {
+    if (kIsWeb) return; // Skip untuk web
+    
     await configurateLocalTimeZone();
 
     AndroidInitializationSettings androidSetting =
@@ -32,15 +37,18 @@ class NotificationHelper {
 
   static TZDateTime convertTime(
       int year, int month, int day, int hour, int minutes) {
+    if (kIsWeb) return TZDateTime.now(local); // Default untuk web
     return TZDateTime(local, year, month, day, hour, minutes);
   }
 
-  static scheduleNotification(
+  static Future<void> scheduleNotification(
       {required int id,
       required String title,
       required String body,
       required int hour,
       required int minutes}) async {
+    if (kIsWeb) return; // Skip untuk web
+    
     final now = DateTime.now();
     await flutterLocalNotificationsPlugin.zonedSchedule(
         id,
@@ -56,11 +64,14 @@ class NotificationHelper {
         matchDateTimeComponents: DateTimeComponents.time);
   }
 
-  static cancelAll() async {
+  static Future<void> cancelAll() async {
+    if (kIsWeb) return; // Skip untuk web
     await flutterLocalNotificationsPlugin.cancelAll();
   }
 
   static Future<bool> requestPermission() async {
+    if (kIsWeb) return true; // Web selalu dianggap granted
+    
     bool isGranted = false;
     if (Platform.isIOS) {
       isGranted = await flutterLocalNotificationsPlugin
@@ -83,6 +94,8 @@ class NotificationHelper {
   }
 
   static Future<bool> isPermissionGranted() async {
+    if (kIsWeb) return true; // Web selalu dianggap granted
+    
     bool isGranted = false;
     if (Platform.isIOS) {
       final permission = await flutterLocalNotificationsPlugin
@@ -100,5 +113,20 @@ class NotificationHelper {
     }
 
     return isGranted;
+  }
+
+  static Future<void> setScheduledNotification(
+      int timeNotification,
+      ScheduleEntity schedule) async {
+    if (kIsWeb) return; // Skip untuk web
+
+    final now = DateTime.now();
+    await scheduleNotification(
+      id: 'attendance'.hashCode,
+      title: 'Pengingat Absensi',
+      body: 'Waktunya melakukan absensi',
+      hour: timeNotification,
+      minutes: 0,
+    );
   }
 }

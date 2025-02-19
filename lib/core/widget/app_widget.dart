@@ -4,14 +4,14 @@ import 'package:absen_smkn1_punggelan/core/provider/app_provider.dart';
 import 'package:absen_smkn1_punggelan/core/widget/error_app_widget.dart';
 import 'package:absen_smkn1_punggelan/core/widget/loading_app_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 abstract class AppWidget<T extends AppProvider, P1, P2>
     extends StatelessWidget {
-  AppWidget({Key? key, this.param1, this.param2}) : super(key: key);
+  AppWidget({super.key, this.param1, this.param2});
 
-  late T notifier;
+  T? _notifier;
+  T get notifier => _notifier!;
   final P1? param1;
   final P2? param2;
   FilledButton? _alternatifErrorButton;
@@ -28,7 +28,7 @@ abstract class AppWidget<T extends AppProvider, P1, P2>
   }
 
   Widget _build(BuildContext context) {
-    notifier = Provider.of<T>(context);
+    _notifier = Provider.of<T>(context);
     checkVariableBeforeUi(context);
 
     WidgetsBinding.instance.addPostFrameCallback(
@@ -49,19 +49,24 @@ abstract class AppWidget<T extends AppProvider, P1, P2>
           ? LoadingAppWidget()
           : (notifier.errorMessage.isNotEmpty)
               ? ErrorAppWidget(
-                  description: notifier.errorMessage,
-                  onPressDefaultButton: () {
-                    notifier.init();
-                    notifier.errorMeesage = '';
-                  },
+                  message: notifier.errorMessage,
                   alternatifButton: _alternatifErrorButton,
+                  onRetry: () {
+                    notifier.errorMessage = '';
+                    onRetry(context);
+                  },
                 )
               : bodyBuild(context),
     );
   }
 
-  void checkVariableBeforeUi(BuildContext context) {}
-  void checkVariableAfterUi(BuildContext context) {}
-  AppBar? appBarBuild(BuildContext context) => null;
+  PreferredSizeWidget? appBarBuild(BuildContext context) => null;
+
   Widget bodyBuild(BuildContext context);
+
+  void checkVariableBeforeUi(BuildContext context) {}
+
+  void checkVariableAfterUi(BuildContext context) {}
+
+  void onRetry(BuildContext context) {}
 }

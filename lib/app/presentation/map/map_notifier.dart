@@ -16,16 +16,20 @@ class MapNotifier extends AppProvider {
   final ScheduleGetUseCase _scheduleGetUseCase;
   final AttendanceSendUseCase _attendanceSendUseCase;
   final ScheduleBannedUseCase _scheduleBannedUseCase;
-  MapNotifier(this._scheduleGetUseCase, this._attendanceSendUseCase,
-      this._scheduleBannedUseCase) {
+
+  MapNotifier(
+    this._scheduleGetUseCase,
+    this._attendanceSendUseCase,
+    this._scheduleBannedUseCase,
+  ) {
     init();
   }
 
   bool _isSuccess = false;
   bool _isEnableSubmitButton = false;
   MapController _mapController = MapController.withPosition(
-      initPosition:
-          GeoPoint(latitude: -6.17549964024, longitude: 106.827149391));
+    initPosition: GeoPoint(latitude: -6.17549964024, longitude: 106.827149391),
+  );
   ScheduleEntity? _schedule;
   late CircleOSM _circle;
   bool _isGrantedLocation = false;
@@ -36,10 +40,8 @@ class MapNotifier extends AppProvider {
   bool get isSuccess => _isSuccess;
   bool get isEnableSubmitButton => _isEnableSubmitButton;
   MapController get mapController => _mapController;
-
   ScheduleEntity? get schedule => _schedule;
-
-  bool get isGrantedLocaiton => _isGrantedLocation;
+  bool get isGrantedLocation => _isGrantedLocation;
   bool get isEnabledLocation => _isEnabledLocation;
 
   @override
@@ -49,83 +51,86 @@ class MapNotifier extends AppProvider {
     if (errorMessage.isEmpty) _checkShift();
   }
 
-  _getEnableAndPermission() async {
+  Future<void> _getEnableAndPermission() async {
     showLoading();
     _isGrantedLocation = await LocationHelper.isGrantedLocationPermission();
     if (_isGrantedLocation) {
       _isEnabledLocation = await LocationHelper.isEnabledLocationService();
       if (!_isEnabledLocation) {
-        errorMeesage = 'Harap mengaktifkan GPS';
+        errorMessage = 'Harap mengaktifkan GPS';
       }
     } else {
-      errorMeesage = 'Harap menyetujui permission';
+      errorMessage = 'Harap menyetujui permission';
     }
     hideLoading();
   }
 
-  _getSchedule() async {
+  Future<void> _getSchedule() async {
     showLoading();
     final response = await _scheduleGetUseCase();
     if (response.success) {
       _schedule = response.data!;
       _circle = CircleOSM(
-          key: 'Center-Point',
-          centerPoint: GeoPoint(
-              latitude: _schedule!.office.latitude,
-              longitude: _schedule!.office.longitude),
-          radius: _schedule!.office.radius,
-          color: Colors.red.withOpacity(0.5),
-          strokeWidth: 2,
-          borderColor: Colors.red);
+        key: 'Center-Point',
+        centerPoint: GeoPoint(
+          latitude: _schedule!.office.latitude,
+          longitude: _schedule!.office.longitude,
+        ),
+        radius: _schedule!.office.radius,
+        color: Colors.red.withOpacity(0.5),
+        strokeWidth: 2,
+        borderColor: Colors.red,
+      );
     } else {
-      errorMeesage = response.message;
+      errorMessage = response.message;
     }
     hideLoading();
   }
 
-  _checkShift() {
+  void _checkShift() {
     final now = DateTime.now();
     final startTimeShift = _schedule!.shift.startTime.split(':');
     final dateTimeShift = DateTime(
-        now.year,
-        now.month,
-        now.day,
-        int.parse(startTimeShift[0]),
-        int.parse(startTimeShift[1]),
-        int.parse(startTimeShift[2]));
+      now.year,
+      now.month,
+      now.day,
+      int.parse(startTimeShift[0]),
+      int.parse(startTimeShift[1]),
+      int.parse(startTimeShift[2]),
+    );
     if (DateTimeHelper.getDifference(a: now, b: dateTimeShift) >
-        Duration(minutes: 30)) {
-      errorMeesage =
+        const Duration(minutes: 30)) {
+      errorMessage =
           'Kehadiran dapat dibuat paling cepat 30 menit sebelum shift dimulai';
     }
   }
 
-  checkLocationPermission() async {
+  Future<void> checkLocationPermission() async {
     _isGrantedLocation = await LocationHelper.isGrantedLocationPermission();
     if (!_isGrantedLocation && !isDispose) {
       checkLocationPermission();
     } else {
-      errorMeesage = '';
+      errorMessage = '';
       init();
     }
   }
 
-  checkLocationService() async {
+  Future<void> checkLocationService() async {
     _isEnabledLocation = await LocationHelper.isEnabledLocationService();
     if (!_isEnabledLocation && !isDispose) {
       checkLocationService();
     } else {
-      errorMeesage = '';
+      errorMessage = '';
       init();
     }
   }
 
-  mapIsReady() async {
+  Future<void> mapIsReady() async {
     _openStreamCurrentLocation();
     await mapController.drawCircle(_circle);
   }
 
-  _openStreamCurrentLocation() async {
+  void _openStreamCurrentLocation() {
     _streamCurrentLocation = Geolocator.getPositionStream().listen(
       (position) {
         if (position.isMocked) {
@@ -133,18 +138,23 @@ class MapNotifier extends AppProvider {
           _sendBanned();
         } else {
           if (!isDispose && !isLoading) {
-            if (_currentLocation != null)
+            if (_currentLocation != null) {
               _mapController.removeMarker(_currentLocation!);
+            }
             _currentLocation = GeoPoint(
-                latitude: position.latitude, longitude: position.longitude);
-            _mapController.addMarker(_currentLocation!,
-                markerIcon: MarkerIcon(
-                  icon: Icon(
-                    Icons.account_circle,
-                    color: Colors.red,
-                    size: 30,
-                  ),
-                ));
+              latitude: position.latitude,
+              longitude: position.longitude,
+            );
+            _mapController.addMarker(
+              _currentLocation!,
+              markerIcon: MarkerIcon(
+                icon: const Icon(
+                  Icons.account_circle,
+                  color: Colors.red,
+                  size: 30,
+                ),
+              ),
+            );
             _mapController.moveTo(_currentLocation!, animate: true);
             _validationSubmitButton();
           } else {
@@ -155,48 +165,59 @@ class MapNotifier extends AppProvider {
     );
   }
 
-  _closeStreamCurrentLocation() {
+  void _closeStreamCurrentLocation() {
     _streamCurrentLocation.cancel();
   }
 
-  _validationSubmitButton() {
-    if (_schedule!.isWfa) {
-      if (!_isEnableSubmitButton) {
-        _isEnableSubmitButton = true;
-        notifyListeners();
-      }
-    } else {
-      final inCircle =
-          LocationHelper.isLocationInCircle(_circle, _currentLocation!);
-      if (inCircle != _isEnableSubmitButton) {
-        _isEnableSubmitButton = inCircle;
-        notifyListeners();
-      }
+  void _validationSubmitButton() {
+    if (_currentLocation != null && _schedule != null) {
+      final distance = Geolocator.distanceBetween(
+        _currentLocation!.latitude,
+        _currentLocation!.longitude,
+        _schedule!.office.latitude,
+        _schedule!.office.longitude,
+      );
+      _isEnableSubmitButton = distance <= _schedule!.office.radius;
+      notifyListeners();
     }
   }
 
-  send() async {
-    showLoading();
-    final response = await _attendanceSendUseCase(
-        param: AttendanceParamEntity(
-            latitude: _currentLocation!.latitude,
-            longitude: _currentLocation!.longitude));
-    if (response.success) {
-      _isSuccess = true;
-    } else {
-      snackbarMessage = response.message;
-    }
-    hideLoading();
-  }
-
-  _sendBanned() async {
+  Future<void> _sendBanned() async {
     showLoading();
     final response = await _scheduleBannedUseCase();
     if (response.success) {
-      _getSchedule();
+      _isSuccess = true;
     } else {
-      errorMeesage = response.message;
+      errorMessage = response.message;
     }
     hideLoading();
+  }
+
+  Future<void> send() async {
+    showLoading();
+    final attendance = Attendance.paramEntity(
+      latitude: _currentLocation!.latitude,
+      longitude: _currentLocation!.longitude,
+    );
+    final response = await _attendanceSendUseCase.call(
+      param: attendance.map(
+        entity: (_) => throw Exception('Invalid type'),
+        paramEntity: (param) => param,
+        paramGetEntity: (_) => throw Exception('Invalid type'),
+      ),
+    );
+    if (response.success) {
+      _isSuccess = true;
+    } else {
+      errorMessage = response.message;
+    }
+    hideLoading();
+  }
+
+  @override
+  void dispose() {
+    _closeStreamCurrentLocation();
+    _mapController.dispose();
+    super.dispose();
   }
 }

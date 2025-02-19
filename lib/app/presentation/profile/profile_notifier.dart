@@ -3,6 +3,7 @@ import 'package:absen_smkn1_punggelan/core/helper/shared_preferences_helper.dart
 import 'package:absen_smkn1_punggelan/core/provider/app_provider.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ProfileNotifier extends AppProvider {
   final String baseUrl = 'https://app.sjasmkn1punggelan.org/api';
@@ -17,6 +18,8 @@ class ProfileNotifier extends AppProvider {
   String? _profilePicture;
   bool _canUpdateProfile = false;
   bool _isLoading = false;
+  bool _isPhotoUpdateEnabled = false;  // Status untuk update foto
+  DateTime? _photoUpdateDeadline;      // Batas waktu update foto
 
   bool get canUpdateProfile => _canUpdateProfile;
   bool get isLoading => _isLoading;
@@ -27,6 +30,7 @@ class ProfileNotifier extends AppProvider {
   String get email => _email;
   String get phone => _phone;
   String? get profilePicture => _profilePicture;
+  bool get canUpdatePhoto => _isPhotoUpdateEnabled;
 
   ProfileNotifier() {
     init();
@@ -42,32 +46,55 @@ class ProfileNotifier extends AppProvider {
       _address = await SharedPreferencesHelper.getAddress() ?? '-';
       _name = await SharedPreferencesHelper.getString('name') ?? 'User';
       _profilePicture = await SharedPreferencesHelper.getString('profile_picture');
+      
+      // Set default ke true dan cek permission
+      _canUpdateProfile = true;
+      _isPhotoUpdateEnabled = true;
       await checkProfileUpdatePermission();
+      
       notifyListeners();
     } catch (e) {
-      debugPrint('Error initializing profile: $e');
+      debugPrint('Gagal menginisialisasi profil: $e');
     }
   }
 
   Future<void> checkProfileUpdatePermission() async {
     try {
       final token = await _getToken();
-      if (token == null) return;
+      if (token == null) {
+        _canUpdateProfile = false;
+        _isPhotoUpdateEnabled = false;
+        notifyListeners();
+        return;
+      }
 
       final dio = Dio();
       dio.options.headers['Authorization'] = 'Bearer $token';
-
-      final response = await dio.get(
-        '$baseUrl/profile/check-update-permission',
-      );
-
+      
+      debugPrint('Checking profile permissions...');
+      final response = await dio.get('$baseUrl/api/settings/profile-permissions');
+      debugPrint('Permission Response: ${response.data}');
+      
       if (response.data['success']) {
-        _canUpdateProfile = response.data['data']['can_update_profile'];
+        final settings = response.data['data'];
+        
+        // Update permissions dari response
+        _canUpdateProfile = settings['can_update_profile'] ?? true;
+        _isPhotoUpdateEnabled = settings['can_update_photo'] ?? true;
+        
+        debugPrint('Can Update Profile: $_canUpdateProfile');
+        debugPrint('Can Update Photo: $_isPhotoUpdateEnabled');
       } else {
-        _canUpdateProfile = false;
+        // Jika gagal mendapatkan settings, tetap bisa update
+        _canUpdateProfile = true;
+        _isPhotoUpdateEnabled = true;
+        debugPrint('Failed to get settings, defaulting to enabled');
       }
     } catch (e) {
-      _canUpdateProfile = false;
+      debugPrint('Error checking permissions: $e');
+      // Default ke true jika error
+      _canUpdateProfile = true;
+      _isPhotoUpdateEnabled = true;
     }
     notifyListeners();
   }
@@ -76,125 +103,76 @@ class ProfileNotifier extends AppProvider {
     return await SharedPreferencesHelper.getString('token');
   }
 
-  void _showSuccessMessage(String message) {
-    // Success messages will be handled by the UI
-  }
-
   Future<void> deleteProfilePicture(BuildContext context) async {
     try {
       if (!_canUpdateProfile) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Maaf, saat ini Anda tidak diizinkan untuk mengubah profil'),
-            backgroundColor: Colors.orange,
-          ),
-        );
-        return;
+        throw Exception('Anda tidak memiliki izin untuk mengubah profil');
+      }
+
+      if (!_isPhotoUpdateEnabled) {
+        throw Exception('Fitur update foto sedang dinonaktifkan');
       }
 
       showLoading();
-      final token = await SharedPreferencesHelper.getString('token');
-      
+      final token = await _getToken();
       if (token == null) {
-        throw Exception('Authentication token not found');
+        throw Exception('Token tidak ditemukan');
       }
       
-      final response = await _dio.delete(
-        '$baseUrl/profile/delete-picture',
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-          },
-        ),
+      _dio.options.headers['Authorization'] = 'Bearer $token';
+      final response = await _dio.post(
+        '$baseUrl/api/profile/delete-photo',
       );
 
-      if (response.statusCode == 200) {
-        await SharedPreferencesHelper.setString('profile_picture', '');
-        _profilePicture = null;
+      if (response.data['success']) {
+        await init();
+        hideLoading();
         notifyListeners();
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Foto profil berhasil dihapus'),
-            backgroundColor: Colors.green,
-          ),
-        );
       } else {
-        throw Exception('Failed to delete profile picture: ${response.statusMessage}');
+        hideLoading();
+        throw Exception(response.data['message'] ?? 'Gagal menghapus foto');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Gagal menghapus foto profil: ${e.toString()}'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } finally {
       hideLoading();
+      rethrow;
     }
   }
 
   Future<void> uploadProfilePicture(BuildContext context, File imageFile) async {
     try {
       if (!_canUpdateProfile) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Maaf, saat ini Anda tidak diizinkan untuk mengubah profil'),
-            backgroundColor: Colors.orange,
-          ),
-        );
-        return;
+        throw Exception('Anda tidak memiliki izin untuk mengubah profil');
+      }
+
+      if (!_isPhotoUpdateEnabled) {
+        throw Exception('Fitur update foto sedang dinonaktifkan');
       }
 
       showLoading();
-      final token = await SharedPreferencesHelper.getString('token');
-      
-      if (token == null) {
-        throw Exception('Authentication token not found');
-      }
-      
+      final token = await _getToken();
+      if (token == null) throw Exception('Token tidak ditemukan');
+
       final formData = FormData.fromMap({
-        'profile_picture': await MultipartFile.fromFile(
-          imageFile.path,
-          filename: 'profile_picture.jpg',
-        ),
+        'photo': await MultipartFile.fromFile(imageFile.path),
       });
 
+      _dio.options.headers['Authorization'] = 'Bearer $token';
       final response = await _dio.post(
-        '$baseUrl/profile/update-picture',
+        '$baseUrl/api/profile/update',
         data: formData,
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-            'Content-Type': 'multipart/form-data',
-          },
-        ),
       );
 
-      if (response.statusCode == 200) {
-        final newProfilePicture = response.data['data']['profile_picture_url'];
-        await SharedPreferencesHelper.setString('profile_picture', newProfilePicture);
-        _profilePicture = newProfilePicture;
+      if (response.data['success']) {
+        await init();
+        hideLoading();
         notifyListeners();
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Foto profil berhasil diperbarui'),
-            backgroundColor: Colors.green,
-          ),
-        );
       } else {
-        throw Exception('Failed to upload profile picture: ${response.statusMessage}');
+        hideLoading();
+        throw Exception(response.data['message'] ?? 'Gagal mengupload foto');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Gagal mengupload foto profil: ${e.toString()}'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } finally {
       hideLoading();
+      rethrow;
     }
   }
 
@@ -207,15 +185,16 @@ class ProfileNotifier extends AppProvider {
     File? photo,
   }) async {
     try {
-      _isLoading = true;
-      notifyListeners();
+      // Khusus untuk update foto, cek apakah fitur diaktifkan
+      if (photo != null && !_isPhotoUpdateEnabled) {
+        throw Exception('Maaf, fitur update foto sedang dinonaktifkan oleh admin');
+      }
 
-      final dio = Dio();
+      showLoading();
       final token = await _getToken();
-      if (token == null) throw Exception('Authentication token not found');
-      
-      dio.options.headers['Authorization'] = 'Bearer $token';
+      if (token == null) throw Exception('Token tidak ditemukan');
 
+      debugPrint('Preparing to update profile...');
       final formData = FormData.fromMap({
         if (name != null) 'name': name,
         if (email != null) 'email': email,
@@ -225,37 +204,47 @@ class ProfileNotifier extends AppProvider {
         if (photo != null) 'photo': await MultipartFile.fromFile(photo.path),
       });
 
-      final response = await dio.post(
-        '$baseUrl/profile/update',
-        data: formData,
-      );
+      debugPrint('Form data prepared: ${formData.fields}');
+      _dio.options.headers['Authorization'] = 'Bearer $token';
+      
+      try {
+        debugPrint('Sending update request...');
+        final response = await _dio.post(
+          '$baseUrl/api/profile/update',
+          data: formData,
+        );
+        debugPrint('Update Response: ${response.data}');
 
-      if (response.data['success']) {
-        final userData = response.data['data']['user'];
-        _name = userData['name'];
-        _email = userData['email'];
-        _phone = userData['phone'];
-        if (userData['photo_url'] != null) {
-          _profilePicture = userData['photo_url'];
+        if (response.data['success']) {
+          debugPrint('Profile update successful');
+          // Memperbarui penyimpanan lokal
+          if (name != null) await SharedPreferencesHelper.setString('name', name);
+          if (email != null) await SharedPreferencesHelper.setEmail(email);
+          if (phone != null) await SharedPreferencesHelper.setPhone(phone);
+          
+          // Memperbarui data profil
+          await init();
+          hideLoading();
+          notifyListeners();
+        } else {
+          hideLoading();
+          throw Exception(response.data['message'] ?? 'Gagal memperbarui profil');
         }
-        
-        notifyListeners();
-      } else {
-        throw Exception(response.data['message']);
-      }
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 429) {
-        throw Exception('Terlalu banyak permintaan. Silakan coba lagi nanti.');
-      } else if (e.response?.data != null) {
-        throw Exception(e.response?.data['message'] ?? 'Gagal memperbarui profil');
-      } else {
-        throw Exception('Terjadi kesalahan. Silakan coba lagi.');
+      } on DioException catch (e) {
+        debugPrint('DioError: ${e.response?.data}');
+        hideLoading();
+        if (e.response?.statusCode == 429) {
+          throw Exception('Terlalu banyak permintaan. Silakan tunggu beberapa saat.');
+        } else if (e.response?.statusCode == 403) {
+          throw Exception('Anda tidak memiliki izin untuk mengubah profil');
+        } else {
+          throw Exception(e.response?.data?['message'] ?? 'Gagal memperbarui profil');
+        }
       }
     } catch (e) {
-      throw Exception(e.toString());
-    } finally {
-      _isLoading = false;
-      notifyListeners();
+      debugPrint('Error updating profile: $e');
+      hideLoading();
+      rethrow;
     }
   }
 
@@ -266,24 +255,18 @@ class ProfileNotifier extends AppProvider {
   ) async {
     try {
       if (!_canUpdateProfile) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Maaf, saat ini Anda tidak diizinkan untuk mengubah password'),
-            backgroundColor: Colors.orange,
-          ),
-        );
-        return;
+        throw Exception('Anda tidak memiliki izin untuk mengubah password');
       }
 
       showLoading();
       final token = await SharedPreferencesHelper.getString('token');
       
       if (token == null) {
-        throw Exception('Authentication token not found');
+        throw Exception('Token tidak ditemukan');
       }
       
       final response = await _dio.post(
-        '$baseUrl/profile/change-password',
+        '$baseUrl/api/profile/change-password',
         data: {
           'current_password': currentPassword,
           'new_password': newPassword,
@@ -304,7 +287,7 @@ class ProfileNotifier extends AppProvider {
           ),
         );
       } else {
-        throw Exception('Failed to change password: ${response.statusMessage}');
+        throw Exception('Gagal mengubah password: ${response.statusMessage}');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
