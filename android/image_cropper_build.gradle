@@ -1,0 +1,9 @@
+android {
+    namespace 'com.example.skansapung_presensi.image_cropper'
+    compileSdkVersion 34
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
