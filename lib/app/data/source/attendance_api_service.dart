@@ -1,5 +1,5 @@
 import 'package:absen_smkn1_punggelan/core/constant/constant.dart';
-import 'package:absen_smkn1_punggelan/core/network/data_state.dart';
+import 'package:absen_smkn1_punggelan/core/network/base_response.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:retrofit/retrofit.dart';
@@ -13,14 +13,14 @@ abstract class AttendanceApiService {
   }
 
   @GET('/api/get-attendance-today')
-  Future<HttpResponse<DataState>> getAttendanceToday();
+  Future<HttpResponse<BaseResponse>> getAttendanceToday();
 
   @POST('/api/store-attendance')
-  Future<HttpResponse<DataState>> sendAttendance(
+  Future<HttpResponse<BaseResponse>> sendAttendance(
       {@Body() required Map<String, dynamic> body});
 
   @GET('/api/get-attendance-by-month-year/{month}/{year}')
-  Future<HttpResponse<DataState>> getAttendanceByMonthYear(
+  Future<HttpResponse<BaseResponse>> getAttendanceByMonthYear(
       {@Path('month') required String month,
       @Path('year') required String year});
 }

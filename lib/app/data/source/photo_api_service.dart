@@ -1,5 +1,5 @@
 import 'package:absen_smkn1_punggelan/core/constant/constant.dart';
-import 'package:absen_smkn1_punggelan/core/network/data_state.dart';
+import 'package:absen_smkn1_punggelan/core/network/base_response.dart';
 import 'package:retrofit/http.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
@@ -13,7 +13,7 @@ abstract class PhotoApiService {
   }
 
   @GET('/api/get-photo')
-  Future<HttpResponse<DataState>> get();
+  Future<HttpResponse<BaseResponse>> get();
 
   @GET('{path}')
   @DioResponseType(ResponseType.bytes)

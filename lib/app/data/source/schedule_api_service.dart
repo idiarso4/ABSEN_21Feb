@@ -1,5 +1,5 @@
 import 'package:absen_smkn1_punggelan/core/constant/constant.dart';
-import 'package:absen_smkn1_punggelan/core/network/data_state.dart';
+import 'package:absen_smkn1_punggelan/core/network/base_response.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
@@ -12,8 +12,8 @@ abstract class ScheduleApiService {
   }
 
   @GET('/api/get-schedule')
-  Future<HttpResponse<DataState>> get();
+  Future<HttpResponse<BaseResponse>> get();
 
   @POST('/api/banned')
-  Future<HttpResponse<DataState>> banned();
+  Future<HttpResponse<BaseResponse>> banned();
 }

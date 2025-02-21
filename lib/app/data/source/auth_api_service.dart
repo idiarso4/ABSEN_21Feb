@@ -1,5 +1,5 @@
 import 'package:absen_smkn1_punggelan/core/constant/constant.dart';
-import 'package:absen_smkn1_punggelan/core/network/data_state.dart';
+import 'package:absen_smkn1_punggelan/core/network/base_response.dart';
 import 'package:retrofit/http.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
@@ -13,6 +13,6 @@ abstract class AuthApiService {
   }
 
   @POST('/api/login')
-  Future<HttpResponse<DataState>> login(
+  Future<HttpResponse<BaseResponse>> login(
       {@Body() required Map<String, dynamic> body});
 }

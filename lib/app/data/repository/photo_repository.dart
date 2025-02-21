@@ -19,15 +19,19 @@ class PhotoRepositoryImpl extends PhotoRepository {
   }
 
   @override
-  Future<DataState> getBytes(String url) async {
-    final response =
-        await _photoApiService.getBytes(path: url.replaceAll(BASE_URL, ''));
-    if (response.response.statusCode == HttpStatus.ok) {
-      return SuccessState(data: response.response.data);
-    } else {
-      return ErrorState(
-          message:
-              '${response.response.statusCode} : ${response.response.statusMessage}');
+  Future<DataState<dynamic>> getBytes(String url) async {
+    try {
+      final response =
+          await _photoApiService.getBytes(path: url.replaceAll(BASE_URL, ''));
+      if (response.response.statusCode == HttpStatus.ok) {
+        return SuccessState(data: response.response.data);
+      } else {
+        return ErrorState(
+            message:
+                '${response.response.statusCode} : ${response.response.statusMessage ?? 'Unknown error'}');
+      }
+    } catch (e) {
+      return ErrorState(message: e.toString());
     }
   }
 }

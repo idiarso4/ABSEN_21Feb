@@ -12,17 +12,19 @@ class AuthRepositoryImpl extends AuthRepository {
   AuthRepositoryImpl(this._authApiService);
 
   @override
-  Future<DataState> login(AuthEntity param) {
+  Future<DataState<void>> login(AuthEntity param) {
     return handleResponse(
       () => _authApiService.login(body: param.toJson()),
       (json) async {
-        final authModel = AuthModel.fromJson(json);
-        await SharedPreferencesHelper.setString(
-            PREF_AUTH, '${authModel.tokenType} ${authModel.accessToken}');
-        await SharedPreferencesHelper.setInt(PREF_ID, authModel.user.id);
-        await SharedPreferencesHelper.setString(PREF_NAME, authModel.user.name);
-        await SharedPreferencesHelper.setString(
-            PREF_EMAIL, authModel.user.email);
+        if (json != null) {
+          final authModel = AuthModel.fromJson(json);
+          await SharedPreferencesHelper.setString(
+              PREF_AUTH, '${authModel.tokenType} ${authModel.accessToken}');
+          await SharedPreferencesHelper.setInt(PREF_ID, authModel.user.id);
+          await SharedPreferencesHelper.setString(PREF_NAME, authModel.user.name);
+          await SharedPreferencesHelper.setString(
+              PREF_EMAIL, authModel.user.email);
+        }
         return null;
       },
     );

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 
-class MapScreen extends AppWidget<MapNotifier, void, void> {
+class MapScreen extends AppWidgetParam<MapNotifier, void, void> {
   @override
   void checkVariableBeforeUi(BuildContext context) {
     if (!notifier.isGrantedLocation) {

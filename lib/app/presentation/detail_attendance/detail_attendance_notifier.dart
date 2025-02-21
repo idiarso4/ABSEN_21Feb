@@ -31,6 +31,7 @@ class DetailAttendanceNotifier extends AppProvider {
   ];
 
   List<AttendanceEntity> _listAttendance = [];
+  String? _errorMessage;
 
   TextEditingController get monthController => _monthController;
   TextEditingController get yearController => _yearController;
@@ -39,6 +40,9 @@ class DetailAttendanceNotifier extends AppProvider {
   List<DropdownMenuEntry<int>> get yearListDropdown => _yearListDropdown;
 
   List<AttendanceEntity> get listAttendance => _listAttendance;
+
+  @override
+  String? get errorMessage => _errorMessage;
 
   @override
   void init() {
@@ -61,7 +65,7 @@ class DetailAttendanceNotifier extends AppProvider {
     if (response.success) {
       _listAttendance = response.data!;
     } else {
-      errorMessage = response.message;
+      _errorMessage = response.message;
     }
     hideLoading();
   }

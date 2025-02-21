@@ -48,7 +48,7 @@ class MapNotifier extends AppProvider {
   void init() async {
     await _getEnableAndPermission();
     await _getSchedule();
-    if (errorMessage.isEmpty) _checkShift();
+    if (errorMessage == null || (errorMessage?.isEmpty ?? true)) _checkShift();
   }
 
   Future<void> _getEnableAndPermission() async {
@@ -82,7 +82,7 @@ class MapNotifier extends AppProvider {
         borderColor: Colors.red,
       );
     } else {
-      errorMessage = response.message;
+      errorMessage = response.message ?? 'Unknown error';
     }
     hideLoading();
   }
@@ -188,7 +188,7 @@ class MapNotifier extends AppProvider {
     if (response.success) {
       _isSuccess = true;
     } else {
-      errorMessage = response.message;
+      errorMessage = response.message ?? 'Unknown error';
     }
     hideLoading();
   }
@@ -209,7 +209,7 @@ class MapNotifier extends AppProvider {
     if (response.success) {
       _isSuccess = true;
     } else {
-      errorMessage = response.message;
+      errorMessage = response.message ?? 'Unknown error';
     }
     hideLoading();
   }

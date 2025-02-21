@@ -5,7 +5,7 @@ import 'package:absen_smkn1_punggelan/core/widget/app_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
-class LoginScreen extends AppWidget<LoginNotifier, void, void> {
+class LoginScreen extends AppWidgetParam<LoginNotifier, void, void> {
   @override
   void checkVariableAfterUi(BuildContext context) {
     if (notifier.isLoged) {

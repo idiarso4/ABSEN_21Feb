@@ -160,11 +160,14 @@ class HomeNotifier extends AppProvider {
       showLoading();
       final result = await _attendanceGetTodayUseCase.call();
       if (!isClosed) {
-        if (result is SuccessState) {
-          _attendanceToday = result.data;
-        } else if (result is ErrorState) {
-          errorMessage = result.message;
-        }
+        result.fold(
+          onSuccess: (data) {
+            _attendanceToday = data;
+          },
+          onError: (message) {
+            errorMessage = message ?? 'Unknown error';
+          },
+        );
       }
     } catch (e) {
       if (!isClosed) {
@@ -184,12 +187,14 @@ class HomeNotifier extends AppProvider {
       showLoading();
       final result = await _attendanceGetMonthUseCase.call();
       if (!isClosed) {
-        if (result is SuccessState && result.data != null) {
-          _listAttendanceThisMonth = result.data;
-        } else if (result is ErrorState) {
-          errorMessage = result.message;
-          _listAttendanceThisMonth = [];
-        }
+        result.fold(
+          onSuccess: (data) {
+            _listAttendanceThisMonth = data ?? [];
+          },
+          onError: (message) {
+            errorMessage = message ?? 'Unknown error';
+          },
+        );
       }
     } catch (e) {
       if (!isClosed) {
@@ -210,11 +215,14 @@ class HomeNotifier extends AppProvider {
       showLoading();
       final result = await _scheduleGetUseCase.call();
       if (!isClosed) {
-        if (result is SuccessState) {
-          _schedule = result.data;
-        } else if (result is ErrorState) {
-          errorMessage = result.message;
-        }
+        result.fold(
+          onSuccess: (data) {
+            _schedule = data;
+          },
+          onError: (message) {
+            errorMessage = message ?? 'Unknown error';
+          },
+        );
       }
     } catch (e) {
       if (!isClosed) {
@@ -241,23 +249,9 @@ class HomeNotifier extends AppProvider {
     }
   }
 
-  Future<void> saveNotificationSetting(int param) async {
-    try {
-      if (isClosed) return;
-
-      showLoading();
-      await SharedPreferencesHelper.setInt(Constants.PREF_NOTIF_SETTING, param);
-      if (!isClosed) {
-        _timeNotification = param;
-      }
-    } catch (e) {
-      if (!isClosed) {
-        errorMessage = e.toString();
-      }
-    } finally {
-      if (!isClosed) {
-        hideLoading();
-      }
-    }
+  // TODO: Implement notification settings later
+  Future<void> saveNotificationSetting(bool enabled) async {
+    // Implementation will be added later
+    notifyListeners();
   }
 }
