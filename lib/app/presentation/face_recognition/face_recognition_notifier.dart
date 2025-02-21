@@ -34,7 +34,7 @@ class FaceRecognitionNotifier extends AppProvider {
     if (response.success) {
       _setImage(response.data!, ImageType.PRINTED, 1);
     } else {
-      errorMeesage = response.message;
+      errorMessage = response.message;
     }
     hideLoading();
   }

@@ -61,7 +61,7 @@ class DetailAttendanceNotifier extends AppProvider {
     if (response.success) {
       _listAttendance = response.data!;
     } else {
-      errorMeesage = response.message;
+      errorMessage = response.message;
     }
     hideLoading();
   }

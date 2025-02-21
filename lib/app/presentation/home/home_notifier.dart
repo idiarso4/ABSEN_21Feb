@@ -40,8 +40,8 @@ class HomeNotifier extends AppProvider {
   AttendanceEntity? _attendanceToday;
   AttendanceEntity? get attendanceToday => _attendanceToday;
 
-  List<AttendanceEntity> _listAttendanceThisMonth = [];
-  List<AttendanceEntity> get listAttendanceThisMonth => _listAttendanceThisMonth;
+  List<AttendanceEntity>? _listAttendanceThisMonth;
+  List<AttendanceEntity> get listAttendanceThisMonth => _listAttendanceThisMonth ?? [];
 
   ScheduleEntity? _schedule;
   ScheduleEntity? get schedule => _schedule;
@@ -157,26 +157,23 @@ class HomeNotifier extends AppProvider {
     try {
       if (isClosed) return;
 
-      if (_isGrantedNotificationPresmission && _schedule != null) {
-        await NotificationHelper.setScheduledNotification(
-          _timeNotification,
-          _schedule!,
-        );
-      }
-
+      showLoading();
       final result = await _attendanceGetTodayUseCase.call();
       if (!isClosed) {
-        result.fold(
-          (failure) {
-            errorMessage = failure.message;
-          },
-          (data) {
-            _attendanceToday = data;
-          },
-        );
+        if (result is SuccessState) {
+          _attendanceToday = result.data;
+        } else if (result is ErrorState) {
+          errorMessage = result.message;
+        }
       }
     } catch (e) {
-      rethrow;
+      if (!isClosed) {
+        errorMessage = e.toString();
+      }
+    } finally {
+      if (!isClosed) {
+        hideLoading();
+      }
     }
   }
 
@@ -184,19 +181,25 @@ class HomeNotifier extends AppProvider {
     try {
       if (isClosed) return;
 
+      showLoading();
       final result = await _attendanceGetMonthUseCase.call();
       if (!isClosed) {
-        result.fold(
-          (failure) {
-            errorMessage = failure.message;
-          },
-          (data) {
-            _listAttendanceThisMonth = data;
-          },
-        );
+        if (result is SuccessState && result.data != null) {
+          _listAttendanceThisMonth = result.data;
+        } else if (result is ErrorState) {
+          errorMessage = result.message;
+          _listAttendanceThisMonth = [];
+        }
       }
     } catch (e) {
-      rethrow;
+      if (!isClosed) {
+        errorMessage = e.toString();
+        _listAttendanceThisMonth = [];
+      }
+    } finally {
+      if (!isClosed) {
+        hideLoading();
+      }
     }
   }
 
@@ -207,21 +210,20 @@ class HomeNotifier extends AppProvider {
       showLoading();
       final result = await _scheduleGetUseCase.call();
       if (!isClosed) {
-        result.fold(
-          (failure) {
-            errorMessage = failure.message;
-          },
-          (data) {
-            _schedule = data;
-          },
-        );
+        if (result is SuccessState) {
+          _schedule = result.data;
+        } else if (result is ErrorState) {
+          errorMessage = result.message;
+        }
       }
     } catch (e) {
       if (!isClosed) {
         errorMessage = e.toString();
       }
     } finally {
-      if (!isClosed) hideLoading();
+      if (!isClosed) {
+        hideLoading();
+      }
     }
   }
 
@@ -236,6 +238,26 @@ class HomeNotifier extends AppProvider {
       }
     } catch (e) {
       rethrow;
+    }
+  }
+
+  Future<void> saveNotificationSetting(int param) async {
+    try {
+      if (isClosed) return;
+
+      showLoading();
+      await SharedPreferencesHelper.setInt(Constants.PREF_NOTIF_SETTING, param);
+      if (!isClosed) {
+        _timeNotification = param;
+      }
+    } catch (e) {
+      if (!isClosed) {
+        errorMessage = e.toString();
+      }
+    } finally {
+      if (!isClosed) {
+        hideLoading();
+      }
     }
   }
 }
