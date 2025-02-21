@@ -6,28 +6,26 @@ part of 'photo_api_service.dart';
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
 class _PhotoApiService implements PhotoApiService {
   _PhotoApiService(
     this._dio, {
     this.baseUrl,
-  }) {
-    baseUrl ??= 'https://app.sijasmkn1punggelan.org';
-  }
+  });
 
   final Dio _dio;
 
   String? baseUrl;
 
   @override
-  Future<HttpResponse<BaseResponse>> get() async {
-    final _extra = <String, dynamic>{};
+  Future<HttpResponse<InvalidType>> get() async {
+    const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<BaseResponse>>(Options(
+        _setStreamType<HttpResponse<InvalidType>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -43,17 +41,17 @@ class _PhotoApiService implements PhotoApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final _value = BaseResponse.fromJson(_result.data!);
-    final httpResponse = HttpResponse(_value, _result);
+    final value = InvalidType.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
   Future<HttpResponse<List<int>>> getBytes({required String path}) async {
-    final _extra = <String, dynamic>{};
+    const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<List<dynamic>>(_setStreamType<HttpResponse<List<int>>>(Options(
       method: 'GET',
@@ -72,8 +70,8 @@ class _PhotoApiService implements PhotoApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final _value = _result.data!.cast<int>();
-    final httpResponse = HttpResponse(_value, _result);
+    final value = _result.data!.cast<int>();
+    final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 

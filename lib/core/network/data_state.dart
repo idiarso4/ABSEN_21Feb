@@ -4,7 +4,7 @@ import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 import 'base_response.dart';
 
-abstract class DataState<T> {
+class DataState<T> {
   final bool success;
   final String? message;
   final T? data;
@@ -14,6 +14,20 @@ abstract class DataState<T> {
     this.message,
     this.data,
   });
+
+  factory DataState.success(T data) {
+    return DataState(
+      success: true,
+      data: data,
+    );
+  }
+
+  factory DataState.error(String message) {
+    return DataState(
+      success: false,
+      message: message,
+    );
+  }
 
   R fold<R>({
     required R Function(T? data) onSuccess,

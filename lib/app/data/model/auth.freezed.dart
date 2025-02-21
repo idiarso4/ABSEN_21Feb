@@ -14,87 +14,59 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-Auth _$AuthFromJson(Map<String, dynamic> json) {
-  return AuthModel.fromJson(json);
+AuthModel _$AuthModelFromJson(Map<String, dynamic> json) {
+  return _AuthModel.fromJson(json);
 }
 
 /// @nodoc
-mixin _$Auth {
+mixin _$AuthModel {
   @JsonKey(name: 'access_token')
   String get accessToken => throw _privateConstructorUsedError;
   @JsonKey(name: 'token_type')
   String get tokenType => throw _privateConstructorUsedError;
   UserModel get user => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(@JsonKey(name: 'access_token') String accessToken,
-            @JsonKey(name: 'token_type') String tokenType, UserModel user)
-        model,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(@JsonKey(name: 'access_token') String accessToken,
-            @JsonKey(name: 'token_type') String tokenType, UserModel user)?
-        model,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(@JsonKey(name: 'access_token') String accessToken,
-            @JsonKey(name: 'token_type') String tokenType, UserModel user)?
-        model,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthModel value) model,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthModel value)? model,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthModel value)? model,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+
+  /// Serializes this AuthModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $AuthCopyWith<Auth> get copyWith => throw _privateConstructorUsedError;
+
+  /// Create a copy of AuthModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $AuthModelCopyWith<AuthModel> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $AuthCopyWith<$Res> {
-  factory $AuthCopyWith(Auth value, $Res Function(Auth) then) =
-      _$AuthCopyWithImpl<$Res, Auth>;
+abstract class $AuthModelCopyWith<$Res> {
+  factory $AuthModelCopyWith(AuthModel value, $Res Function(AuthModel) then) =
+      _$AuthModelCopyWithImpl<$Res, AuthModel>;
   @useResult
   $Res call(
       {@JsonKey(name: 'access_token') String accessToken,
       @JsonKey(name: 'token_type') String tokenType,
       UserModel user});
+
+  $UserModelCopyWith<$Res> get user;
 }
 
 /// @nodoc
-class _$AuthCopyWithImpl<$Res, $Val extends Auth>
-    implements $AuthCopyWith<$Res> {
-  _$AuthCopyWithImpl(this._value, this._then);
+class _$AuthModelCopyWithImpl<$Res, $Val extends AuthModel>
+    implements $AuthModelCopyWith<$Res> {
+  _$AuthModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AuthModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? accessToken = null,
     Object? tokenType = null,
-    Object? user = freezed,
+    Object? user = null,
   }) {
     return _then(_value.copyWith(
       accessToken: null == accessToken
@@ -105,16 +77,27 @@ class _$AuthCopyWithImpl<$Res, $Val extends Auth>
           ? _value.tokenType
           : tokenType // ignore: cast_nullable_to_non_nullable
               as String,
-      user: freezed == user
+      user: null == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
               as UserModel,
     ) as $Val);
   }
+
+  /// Create a copy of AuthModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $UserModelCopyWith<$Res> get user {
+    return $UserModelCopyWith<$Res>(_value.user, (value) {
+      return _then(_value.copyWith(user: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
-abstract class _$$AuthModelImplCopyWith<$Res> implements $AuthCopyWith<$Res> {
+abstract class _$$AuthModelImplCopyWith<$Res>
+    implements $AuthModelCopyWith<$Res> {
   factory _$$AuthModelImplCopyWith(
           _$AuthModelImpl value, $Res Function(_$AuthModelImpl) then) =
       __$$AuthModelImplCopyWithImpl<$Res>;
@@ -124,22 +107,27 @@ abstract class _$$AuthModelImplCopyWith<$Res> implements $AuthCopyWith<$Res> {
       {@JsonKey(name: 'access_token') String accessToken,
       @JsonKey(name: 'token_type') String tokenType,
       UserModel user});
+
+  @override
+  $UserModelCopyWith<$Res> get user;
 }
 
 /// @nodoc
 class __$$AuthModelImplCopyWithImpl<$Res>
-    extends _$AuthCopyWithImpl<$Res, _$AuthModelImpl>
+    extends _$AuthModelCopyWithImpl<$Res, _$AuthModelImpl>
     implements _$$AuthModelImplCopyWith<$Res> {
   __$$AuthModelImplCopyWithImpl(
       _$AuthModelImpl _value, $Res Function(_$AuthModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AuthModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? accessToken = null,
     Object? tokenType = null,
-    Object? user = freezed,
+    Object? user = null,
   }) {
     return _then(_$AuthModelImpl(
       accessToken: null == accessToken
@@ -150,7 +138,7 @@ class __$$AuthModelImplCopyWithImpl<$Res>
           ? _value.tokenType
           : tokenType // ignore: cast_nullable_to_non_nullable
               as String,
-      user: freezed == user
+      user: null == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
               as UserModel,
@@ -160,8 +148,8 @@ class __$$AuthModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$AuthModelImpl implements AuthModel {
-  _$AuthModelImpl(
+class _$AuthModelImpl implements _AuthModel {
+  const _$AuthModelImpl(
       {@JsonKey(name: 'access_token') required this.accessToken,
       @JsonKey(name: 'token_type') required this.tokenType,
       required this.user});
@@ -180,7 +168,7 @@ class _$AuthModelImpl implements AuthModel {
 
   @override
   String toString() {
-    return 'Auth.model(accessToken: $accessToken, tokenType: $tokenType, user: $user)';
+    return 'AuthModel(accessToken: $accessToken, tokenType: $tokenType, user: $user)';
   }
 
   @override
@@ -192,81 +180,20 @@ class _$AuthModelImpl implements AuthModel {
                 other.accessToken == accessToken) &&
             (identical(other.tokenType, tokenType) ||
                 other.tokenType == tokenType) &&
-            const DeepCollectionEquality().equals(other.user, user));
+            (identical(other.user, user) || other.user == user));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, accessToken, tokenType,
-      const DeepCollectionEquality().hash(user));
+  int get hashCode => Object.hash(runtimeType, accessToken, tokenType, user);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuthModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AuthModelImplCopyWith<_$AuthModelImpl> get copyWith =>
       __$$AuthModelImplCopyWithImpl<_$AuthModelImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(@JsonKey(name: 'access_token') String accessToken,
-            @JsonKey(name: 'token_type') String tokenType, UserModel user)
-        model,
-  }) {
-    return model(accessToken, tokenType, user);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(@JsonKey(name: 'access_token') String accessToken,
-            @JsonKey(name: 'token_type') String tokenType, UserModel user)?
-        model,
-  }) {
-    return model?.call(accessToken, tokenType, user);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(@JsonKey(name: 'access_token') String accessToken,
-            @JsonKey(name: 'token_type') String tokenType, UserModel user)?
-        model,
-    required TResult orElse(),
-  }) {
-    if (model != null) {
-      return model(accessToken, tokenType, user);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthModel value) model,
-  }) {
-    return model(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthModel value)? model,
-  }) {
-    return model?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthModel value)? model,
-    required TResult orElse(),
-  }) {
-    if (model != null) {
-      return model(this);
-    }
-    return orElse();
-  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -276,13 +203,13 @@ class _$AuthModelImpl implements AuthModel {
   }
 }
 
-abstract class AuthModel implements Auth {
-  factory AuthModel(
+abstract class _AuthModel implements AuthModel {
+  const factory _AuthModel(
       {@JsonKey(name: 'access_token') required final String accessToken,
       @JsonKey(name: 'token_type') required final String tokenType,
       required final UserModel user}) = _$AuthModelImpl;
 
-  factory AuthModel.fromJson(Map<String, dynamic> json) =
+  factory _AuthModel.fromJson(Map<String, dynamic> json) =
       _$AuthModelImpl.fromJson;
 
   @override
@@ -293,76 +220,55 @@ abstract class AuthModel implements Auth {
   String get tokenType;
   @override
   UserModel get user;
+
+  /// Create a copy of AuthModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AuthModelImplCopyWith<_$AuthModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
-User _$UserFromJson(Map<String, dynamic> json) {
-  return UserModel.fromJson(json);
+UserModel _$UserModelFromJson(Map<String, dynamic> json) {
+  return _UserModel.fromJson(json);
 }
 
 /// @nodoc
-mixin _$User {
+mixin _$UserModel {
   int get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(int id, String name, String email) model,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int id, String name, String email)? model,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int id, String name, String email)? model,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(UserModel value) model,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(UserModel value)? model,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(UserModel value)? model,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+
+  /// Serializes this UserModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $UserCopyWith<User> get copyWith => throw _privateConstructorUsedError;
+
+  /// Create a copy of UserModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $UserModelCopyWith<UserModel> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $UserCopyWith<$Res> {
-  factory $UserCopyWith(User value, $Res Function(User) then) =
-      _$UserCopyWithImpl<$Res, User>;
+abstract class $UserModelCopyWith<$Res> {
+  factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) then) =
+      _$UserModelCopyWithImpl<$Res, UserModel>;
   @useResult
   $Res call({int id, String name, String email});
 }
 
 /// @nodoc
-class _$UserCopyWithImpl<$Res, $Val extends User>
-    implements $UserCopyWith<$Res> {
-  _$UserCopyWithImpl(this._value, this._then);
+class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
+    implements $UserModelCopyWith<$Res> {
+  _$UserModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of UserModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -388,7 +294,8 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
 }
 
 /// @nodoc
-abstract class _$$UserModelImplCopyWith<$Res> implements $UserCopyWith<$Res> {
+abstract class _$$UserModelImplCopyWith<$Res>
+    implements $UserModelCopyWith<$Res> {
   factory _$$UserModelImplCopyWith(
           _$UserModelImpl value, $Res Function(_$UserModelImpl) then) =
       __$$UserModelImplCopyWithImpl<$Res>;
@@ -399,12 +306,14 @@ abstract class _$$UserModelImplCopyWith<$Res> implements $UserCopyWith<$Res> {
 
 /// @nodoc
 class __$$UserModelImplCopyWithImpl<$Res>
-    extends _$UserCopyWithImpl<$Res, _$UserModelImpl>
+    extends _$UserModelCopyWithImpl<$Res, _$UserModelImpl>
     implements _$$UserModelImplCopyWith<$Res> {
   __$$UserModelImplCopyWithImpl(
       _$UserModelImpl _value, $Res Function(_$UserModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of UserModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -431,8 +340,9 @@ class __$$UserModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$UserModelImpl implements UserModel {
-  _$UserModelImpl({required this.id, required this.name, required this.email});
+class _$UserModelImpl implements _UserModel {
+  const _$UserModelImpl(
+      {required this.id, required this.name, required this.email});
 
   factory _$UserModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserModelImplFromJson(json);
@@ -446,7 +356,7 @@ class _$UserModelImpl implements UserModel {
 
   @override
   String toString() {
-    return 'User.model(id: $id, name: $name, email: $email)';
+    return 'UserModel(id: $id, name: $name, email: $email)';
   }
 
   @override
@@ -459,71 +369,17 @@ class _$UserModelImpl implements UserModel {
             (identical(other.email, email) || other.email == email));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, name, email);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of UserModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UserModelImplCopyWith<_$UserModelImpl> get copyWith =>
       __$$UserModelImplCopyWithImpl<_$UserModelImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(int id, String name, String email) model,
-  }) {
-    return model(id, name, email);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int id, String name, String email)? model,
-  }) {
-    return model?.call(id, name, email);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int id, String name, String email)? model,
-    required TResult orElse(),
-  }) {
-    if (model != null) {
-      return model(id, name, email);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(UserModel value) model,
-  }) {
-    return model(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(UserModel value)? model,
-  }) {
-    return model?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(UserModel value)? model,
-    required TResult orElse(),
-  }) {
-    if (model != null) {
-      return model(this);
-    }
-    return orElse();
-  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -533,13 +389,13 @@ class _$UserModelImpl implements UserModel {
   }
 }
 
-abstract class UserModel implements User {
-  factory UserModel(
+abstract class _UserModel implements UserModel {
+  const factory _UserModel(
       {required final int id,
       required final String name,
       required final String email}) = _$UserModelImpl;
 
-  factory UserModel.fromJson(Map<String, dynamic> json) =
+  factory _UserModel.fromJson(Map<String, dynamic> json) =
       _$UserModelImpl.fromJson;
 
   @override
@@ -548,8 +404,11 @@ abstract class UserModel implements User {
   String get name;
   @override
   String get email;
+
+  /// Create a copy of UserModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UserModelImplCopyWith<_$UserModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

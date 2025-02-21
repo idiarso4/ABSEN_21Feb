@@ -6,7 +6,7 @@ part of 'auth_api_service.dart';
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
 class _AuthApiService implements AuthApiService {
   _AuthApiService(
@@ -23,7 +23,7 @@ class _AuthApiService implements AuthApiService {
   @override
   Future<HttpResponse<BaseResponse>> login(
       {required Map<String, dynamic> body}) async {
-    final _extra = <String, dynamic>{};
+    const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
@@ -45,8 +45,8 @@ class _AuthApiService implements AuthApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final _value = BaseResponse.fromJson(_result.data!);
-    final httpResponse = HttpResponse(_value, _result);
+    final value = BaseResponse.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 

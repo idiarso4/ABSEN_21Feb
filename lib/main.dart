@@ -1,37 +1,54 @@
-import 'package:absen_smkn1_punggelan/app/presentation/login/login_screen.dart';
-import 'package:absen_smkn1_punggelan/core/di/dependency.dart';
-import 'package:absen_smkn1_punggelan/core/widget/error_app_widget.dart';
-import 'package:absen_smkn1_punggelan/core/widget/loading_app_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:absen_smkn1_punggelan/core/helper/notification_helper.dart';
-import 'package:provider/provider.dart';
-import 'package:absen_smkn1_punggelan/app/presentation/profile/profile_notifier.dart';
+import 'screens/login_screen.dart';
+import 'screens/home_screen.dart';
+import 'screens/attendance_screen.dart';
+import 'screens/splash_screen.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeDateFormatting('id', null);
-  await initDependency();
-  await NotificationHelper.initNotification();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ProfileNotifier()),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.red),
-        home: Scaffold(
-          body: LoginScreen(),
+    return MaterialApp(
+      title: 'SMKN 1 PUNGGELAN',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        fontFamily: 'Poppins',
+        useMaterial3: true,
+        appBarTheme: const AppBarTheme(
+          centerTitle: true,
+          elevation: 0,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
         ),
       ),
+      home: const SplashScreen(),
+      routes: {
+        '/splash': (context) => const SplashScreen(),
+        '/login': (context) => const LoginScreen(),
+        '/home': (context) => const HomeScreen(),
+        '/attendance': (context) => const AttendanceScreen(),
+      },
     );
   }
 }

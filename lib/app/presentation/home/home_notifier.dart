@@ -9,10 +9,10 @@ import '../../../core/network/data_state.dart';
 import '../../../core/provider/app_provider.dart';
 import '../../module/entity/attendance.dart';
 import '../../module/entity/schedule.dart';
-import '../../module/usecase/attendance_get_month_usecase.dart';
-import '../../module/usecase/attendance_get_today_usecase.dart';
-import '../../module/usecase/schedule_banned_usecase.dart';
-import '../../module/usecase/schedule_get_usecase.dart';
+import '../../module/use_case/attendance_get_this_month.dart';
+import '../../module/use_case/attendance_get_today.dart';
+import '../../module/use_case/schedule_banned.dart';
+import '../../module/use_case/schedule_get.dart';
 import '../../../core/utils/constants.dart';
 
 class HomeNotifier extends AppProvider {

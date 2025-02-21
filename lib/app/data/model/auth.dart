@@ -4,21 +4,25 @@ part 'auth.g.dart';
 part 'auth.freezed.dart';
 
 @freezed
-sealed class Auth with _$Auth {
-  factory Auth.model(
-      {@JsonKey(name: 'access_token') required String accessToken,
-      @JsonKey(name: 'token_type') required String tokenType,
-      required UserModel user}) = AuthModel;
+class AuthModel with _$AuthModel {
+  const factory AuthModel({
+    @JsonKey(name: 'access_token') required String accessToken,
+    @JsonKey(name: 'token_type') required String tokenType,
+    required UserModel user,
+  }) = _AuthModel;
 
-  factory Auth.fromJson(Map<String, dynamic> json) => _$AuthFromJson(json);
+  factory AuthModel.fromJson(Map<String, dynamic> json) =>
+      _$AuthModelFromJson(json);
 }
 
 @freezed
-sealed class User with _$User {
-  factory User.model(
-      {required int id,
-      required String name,
-      required String email}) = UserModel;
+class UserModel with _$UserModel {
+  const factory UserModel({
+    required int id,
+    required String name,
+    required String email,
+  }) = _UserModel;
 
-  factory User.fromJson(Map<String, Object> json) => _$UserFromJson(json);
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 }

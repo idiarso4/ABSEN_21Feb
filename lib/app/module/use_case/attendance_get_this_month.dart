@@ -1,16 +1,15 @@
-import 'package:absen_smkn1_punggelan/app/module/entity/attendance.dart';
-import 'package:absen_smkn1_punggelan/app/module/repository/attendance_repository.dart';
-import 'package:absen_smkn1_punggelan/core/network/data_state.dart';
-import 'package:absen_smkn1_punggelan/core/use_case/app_use_case.dart';
+import '../../../core/network/data_state.dart';
+import '../../../core/use_case/app_use_case.dart';
+import '../entity/attendance.dart';
+import '../repository/attendance_repository.dart';
 
-class AttendanceGetMonthUseCase
-    extends AppUseCase<Future<DataState<List<AttendanceEntity>>>, void> {
-  final AttendanceRepository _attendanceRepository;
+class AttendanceGetMonthUseCase extends AppUseCase<Future<DataState<List<AttendanceEntity>>>, void> {
+  final AttendanceRepository _repository;
 
-  AttendanceGetMonthUseCase(this._attendanceRepository);
+  AttendanceGetMonthUseCase(this._repository);
 
   @override
-  Future<DataState<List<AttendanceEntity>>> call({void param}) {
-    return _attendanceRepository.getThisMonth();
+  Future<DataState<List<AttendanceEntity>>> call({void param}) async {
+    return await _repository.getThisMonth();
   }
 }

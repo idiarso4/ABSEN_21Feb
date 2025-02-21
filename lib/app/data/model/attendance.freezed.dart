@@ -14,80 +14,60 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-Attendance _$AttendanceFromJson(Map<String, dynamic> json) {
-  return AttendanceModel.fromJson(json);
+AttendanceModel _$AttendanceModelFromJson(Map<String, dynamic> json) {
+  return _AttendanceModel.fromJson(json);
 }
 
 /// @nodoc
-mixin _$Attendance {
+mixin _$AttendanceModel {
+  @JsonKey(fromJson: _attendanceFromJson, toJson: _attendanceToJson)
   AttendanceEntity? get today => throw _privateConstructorUsedError;
-  @JsonKey(name: 'this_month')
+  @JsonKey(
+      name: 'this_month',
+      fromJson: _attendanceListFromJson,
+      toJson: _attendanceListToJson)
   List<AttendanceEntity> get thisMonth => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(AttendanceEntity? today,
-            @JsonKey(name: 'this_month') List<AttendanceEntity> thisMonth)
-        model,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AttendanceEntity? today,
-            @JsonKey(name: 'this_month') List<AttendanceEntity> thisMonth)?
-        model,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AttendanceEntity? today,
-            @JsonKey(name: 'this_month') List<AttendanceEntity> thisMonth)?
-        model,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AttendanceModel value) model,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AttendanceModel value)? model,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AttendanceModel value)? model,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+
+  /// Serializes this AttendanceModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $AttendanceCopyWith<Attendance> get copyWith =>
+
+  /// Create a copy of AttendanceModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $AttendanceModelCopyWith<AttendanceModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $AttendanceCopyWith<$Res> {
-  factory $AttendanceCopyWith(
-          Attendance value, $Res Function(Attendance) then) =
-      _$AttendanceCopyWithImpl<$Res, Attendance>;
+abstract class $AttendanceModelCopyWith<$Res> {
+  factory $AttendanceModelCopyWith(
+          AttendanceModel value, $Res Function(AttendanceModel) then) =
+      _$AttendanceModelCopyWithImpl<$Res, AttendanceModel>;
   @useResult
   $Res call(
-      {AttendanceEntity? today,
-      @JsonKey(name: 'this_month') List<AttendanceEntity> thisMonth});
+      {@JsonKey(fromJson: _attendanceFromJson, toJson: _attendanceToJson)
+      AttendanceEntity? today,
+      @JsonKey(
+          name: 'this_month',
+          fromJson: _attendanceListFromJson,
+          toJson: _attendanceListToJson)
+      List<AttendanceEntity> thisMonth});
+
+  $AttendanceEntityCopyWith<$Res>? get today;
 }
 
 /// @nodoc
-class _$AttendanceCopyWithImpl<$Res, $Val extends Attendance>
-    implements $AttendanceCopyWith<$Res> {
-  _$AttendanceCopyWithImpl(this._value, this._then);
+class _$AttendanceModelCopyWithImpl<$Res, $Val extends AttendanceModel>
+    implements $AttendanceModelCopyWith<$Res> {
+  _$AttendanceModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AttendanceModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -105,29 +85,53 @@ class _$AttendanceCopyWithImpl<$Res, $Val extends Attendance>
               as List<AttendanceEntity>,
     ) as $Val);
   }
+
+  /// Create a copy of AttendanceModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $AttendanceEntityCopyWith<$Res>? get today {
+    if (_value.today == null) {
+      return null;
+    }
+
+    return $AttendanceEntityCopyWith<$Res>(_value.today!, (value) {
+      return _then(_value.copyWith(today: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
 abstract class _$$AttendanceModelImplCopyWith<$Res>
-    implements $AttendanceCopyWith<$Res> {
+    implements $AttendanceModelCopyWith<$Res> {
   factory _$$AttendanceModelImplCopyWith(_$AttendanceModelImpl value,
           $Res Function(_$AttendanceModelImpl) then) =
       __$$AttendanceModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
-      {AttendanceEntity? today,
-      @JsonKey(name: 'this_month') List<AttendanceEntity> thisMonth});
+      {@JsonKey(fromJson: _attendanceFromJson, toJson: _attendanceToJson)
+      AttendanceEntity? today,
+      @JsonKey(
+          name: 'this_month',
+          fromJson: _attendanceListFromJson,
+          toJson: _attendanceListToJson)
+      List<AttendanceEntity> thisMonth});
+
+  @override
+  $AttendanceEntityCopyWith<$Res>? get today;
 }
 
 /// @nodoc
 class __$$AttendanceModelImplCopyWithImpl<$Res>
-    extends _$AttendanceCopyWithImpl<$Res, _$AttendanceModelImpl>
+    extends _$AttendanceModelCopyWithImpl<$Res, _$AttendanceModelImpl>
     implements _$$AttendanceModelImplCopyWith<$Res> {
   __$$AttendanceModelImplCopyWithImpl(
       _$AttendanceModelImpl _value, $Res Function(_$AttendanceModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AttendanceModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -149,10 +153,14 @@ class __$$AttendanceModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$AttendanceModelImpl implements AttendanceModel {
-  _$AttendanceModelImpl(
-      {this.today,
-      @JsonKey(name: 'this_month')
+class _$AttendanceModelImpl implements _AttendanceModel {
+  const _$AttendanceModelImpl(
+      {@JsonKey(fromJson: _attendanceFromJson, toJson: _attendanceToJson)
+      this.today,
+      @JsonKey(
+          name: 'this_month',
+          fromJson: _attendanceListFromJson,
+          toJson: _attendanceListToJson)
       required final List<AttendanceEntity> thisMonth})
       : _thisMonth = thisMonth;
 
@@ -160,10 +168,14 @@ class _$AttendanceModelImpl implements AttendanceModel {
       _$$AttendanceModelImplFromJson(json);
 
   @override
+  @JsonKey(fromJson: _attendanceFromJson, toJson: _attendanceToJson)
   final AttendanceEntity? today;
   final List<AttendanceEntity> _thisMonth;
   @override
-  @JsonKey(name: 'this_month')
+  @JsonKey(
+      name: 'this_month',
+      fromJson: _attendanceListFromJson,
+      toJson: _attendanceListToJson)
   List<AttendanceEntity> get thisMonth {
     if (_thisMonth is EqualUnmodifiableListView) return _thisMonth;
     // ignore: implicit_dynamic_type
@@ -172,7 +184,7 @@ class _$AttendanceModelImpl implements AttendanceModel {
 
   @override
   String toString() {
-    return 'Attendance.model(today: $today, thisMonth: $thisMonth)';
+    return 'AttendanceModel(today: $today, thisMonth: $thisMonth)';
   }
 
   @override
@@ -180,86 +192,24 @@ class _$AttendanceModelImpl implements AttendanceModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AttendanceModelImpl &&
-            const DeepCollectionEquality().equals(other.today, today) &&
+            (identical(other.today, today) || other.today == today) &&
             const DeepCollectionEquality()
                 .equals(other._thisMonth, _thisMonth));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(today),
-      const DeepCollectionEquality().hash(_thisMonth));
+      runtimeType, today, const DeepCollectionEquality().hash(_thisMonth));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AttendanceModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AttendanceModelImplCopyWith<_$AttendanceModelImpl> get copyWith =>
       __$$AttendanceModelImplCopyWithImpl<_$AttendanceModelImpl>(
           this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(AttendanceEntity? today,
-            @JsonKey(name: 'this_month') List<AttendanceEntity> thisMonth)
-        model,
-  }) {
-    return model(today, thisMonth);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AttendanceEntity? today,
-            @JsonKey(name: 'this_month') List<AttendanceEntity> thisMonth)?
-        model,
-  }) {
-    return model?.call(today, thisMonth);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AttendanceEntity? today,
-            @JsonKey(name: 'this_month') List<AttendanceEntity> thisMonth)?
-        model,
-    required TResult orElse(),
-  }) {
-    if (model != null) {
-      return model(today, thisMonth);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AttendanceModel value) model,
-  }) {
-    return model(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AttendanceModel value)? model,
-  }) {
-    return model?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AttendanceModel value)? model,
-    required TResult orElse(),
-  }) {
-    if (model != null) {
-      return model(this);
-    }
-    return orElse();
-  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -269,22 +219,33 @@ class _$AttendanceModelImpl implements AttendanceModel {
   }
 }
 
-abstract class AttendanceModel implements Attendance {
-  factory AttendanceModel(
-      {final AttendanceEntity? today,
-      @JsonKey(name: 'this_month')
+abstract class _AttendanceModel implements AttendanceModel {
+  const factory _AttendanceModel(
+      {@JsonKey(fromJson: _attendanceFromJson, toJson: _attendanceToJson)
+      final AttendanceEntity? today,
+      @JsonKey(
+          name: 'this_month',
+          fromJson: _attendanceListFromJson,
+          toJson: _attendanceListToJson)
       required final List<AttendanceEntity> thisMonth}) = _$AttendanceModelImpl;
 
-  factory AttendanceModel.fromJson(Map<String, dynamic> json) =
+  factory _AttendanceModel.fromJson(Map<String, dynamic> json) =
       _$AttendanceModelImpl.fromJson;
 
   @override
+  @JsonKey(fromJson: _attendanceFromJson, toJson: _attendanceToJson)
   AttendanceEntity? get today;
   @override
-  @JsonKey(name: 'this_month')
+  @JsonKey(
+      name: 'this_month',
+      fromJson: _attendanceListFromJson,
+      toJson: _attendanceListToJson)
   List<AttendanceEntity> get thisMonth;
+
+  /// Create a copy of AttendanceModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AttendanceModelImplCopyWith<_$AttendanceModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -62,8 +62,13 @@ mixin _$Schedule {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
+
+  /// Serializes this Schedule to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Schedule
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ScheduleCopyWith<Schedule> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -89,6 +94,8 @@ class _$ScheduleCopyWithImpl<$Res, $Val extends Schedule>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Schedule
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -135,6 +142,8 @@ class __$$ScheduleEntityImplCopyWithImpl<$Res>
       _$ScheduleEntityImpl _value, $Res Function(_$ScheduleEntityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Schedule
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -193,7 +202,7 @@ class _$ScheduleEntityImpl implements ScheduleEntity {
             const DeepCollectionEquality().equals(other.shift, shift));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -201,7 +210,9 @@ class _$ScheduleEntityImpl implements ScheduleEntity {
       const DeepCollectionEquality().hash(office),
       const DeepCollectionEquality().hash(shift));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Schedule
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ScheduleEntityImplCopyWith<_$ScheduleEntityImpl> get copyWith =>
@@ -294,8 +305,11 @@ abstract class ScheduleEntity implements Schedule {
   OfficeEntity get office;
   @override
   ShiftEntity get shift;
+
+  /// Create a copy of Schedule
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ScheduleEntityImplCopyWith<_$ScheduleEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -348,8 +362,13 @@ mixin _$Office {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
+
+  /// Serializes this Office to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Office
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $OfficeCopyWith<Office> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -371,6 +390,8 @@ class _$OfficeCopyWithImpl<$Res, $Val extends Office>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Office
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -419,6 +440,8 @@ class __$$OfficeEntityImplCopyWithImpl<$Res>
       _$OfficeEntityImpl _value, $Res Function(_$OfficeEntityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Office
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -487,12 +510,14 @@ class _$OfficeEntityImpl implements OfficeEntity {
             (identical(other.radius, radius) || other.radius == radius));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, name, latitude, longitude, radius);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Office
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$OfficeEntityImplCopyWith<_$OfficeEntityImpl> get copyWith =>
@@ -586,8 +611,11 @@ abstract class OfficeEntity implements Office {
   double get longitude;
   @override
   double get radius;
+
+  /// Create a copy of Office
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$OfficeEntityImplCopyWith<_$OfficeEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -645,8 +673,13 @@ mixin _$Shift {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
+
+  /// Serializes this Shift to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Shift
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ShiftCopyWith<Shift> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -671,6 +704,8 @@ class _$ShiftCopyWithImpl<$Res, $Val extends Shift>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Shift
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -717,6 +752,8 @@ class __$$ShiftEntityImplCopyWithImpl<$Res>
       _$ShiftEntityImpl _value, $Res Function(_$ShiftEntityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Shift
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -777,11 +814,13 @@ class _$ShiftEntityImpl implements ShiftEntity {
             (identical(other.endTime, endTime) || other.endTime == endTime));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, name, startTime, endTime);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Shift
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ShiftEntityImplCopyWith<_$ShiftEntityImpl> get copyWith =>
@@ -879,8 +918,11 @@ abstract class ShiftEntity implements Shift {
   @override
   @JsonKey(name: 'end_time')
   String get endTime;
+
+  /// Create a copy of Shift
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ShiftEntityImplCopyWith<_$ShiftEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

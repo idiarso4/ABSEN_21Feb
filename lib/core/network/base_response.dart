@@ -12,8 +12,16 @@ class BaseResponse {
   factory BaseResponse.fromJson(Map<String, dynamic> json) {
     return BaseResponse(
       success: json['success'] ?? false,
-      message: json['message'] as String?,
+      message: json['message']?.toString(),
       data: json['data'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'success': success,
+      'message': message,
+      'data': data,
+    };
   }
 }

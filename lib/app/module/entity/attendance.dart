@@ -1,22 +1,42 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'attendance.g.dart';
 part 'attendance.freezed.dart';
 
 @freezed
-sealed class Attendance with _$Attendance {
-  factory Attendance.entity(
-      {@JsonKey(name: 'start_time') required String startTime,
-      @JsonKey(name: 'end_time') required String endTime,
-      String? date}) = AttendanceEntity;
+@JsonSerializable()
+class AttendanceEntity with _$AttendanceEntity {
+  const factory AttendanceEntity({
+    @JsonKey(name: 'start_time') required String startTime,
+    @JsonKey(name: 'end_time') required String endTime,
+    String? date
+  }) = _AttendanceEntity;
 
-  factory Attendance.paramEntity(
-      {required double latitude,
-      required double longitude}) = AttendanceParamEntity;
+  factory AttendanceEntity.fromJson(Map<String, dynamic> json) =>
+      _$AttendanceEntityFromJson(json);
+}
 
-  factory Attendance.paramGetEntity({required int month, required int year}) =
-      AttendanceParamGetEntity;
+@freezed
+@JsonSerializable()
+class AttendanceParamEntity with _$AttendanceParamEntity {
+  const factory AttendanceParamEntity({
+    required double latitude,
+    required double longitude
+  }) = _AttendanceParamEntity;
 
-  factory Attendance.fromJson(Map<String, Object> json) =>
-      _$AttendanceFromJson(json);
+  factory AttendanceParamEntity.fromJson(Map<String, dynamic> json) =>
+      _$AttendanceParamEntityFromJson(json);
+}
+
+@freezed
+@JsonSerializable()
+class AttendanceParamGetEntity with _$AttendanceParamGetEntity {
+  const factory AttendanceParamGetEntity({
+    required int month,
+    required int year
+  }) = _AttendanceParamGetEntity;
+
+  factory AttendanceParamGetEntity.fromJson(Map<String, dynamic> json) =>
+      _$AttendanceParamGetEntityFromJson(json);
 }

@@ -1,14 +1,14 @@
-import 'package:absen_smkn1_punggelan/app/module/repository/schedule_repository.dart';
-import 'package:absen_smkn1_punggelan/core/network/data_state.dart';
-import 'package:absen_smkn1_punggelan/core/use_case/app_use_case.dart';
+import '../../../core/network/data_state.dart';
+import '../../../core/use_case/app_use_case.dart';
+import '../repository/schedule_repository.dart';
 
 class ScheduleBannedUseCase extends AppUseCase<Future<DataState>, void> {
-  final ScheduleRepository _scheduleRepository;
+  final ScheduleRepository _repository;
 
-  ScheduleBannedUseCase(this._scheduleRepository);
+  ScheduleBannedUseCase(this._repository);
 
   @override
-  Future<DataState> call({void param}) {
-    return _scheduleRepository.banned();
+  Future<DataState> call({void param}) async {
+    return await _repository.banned();
   }
 }

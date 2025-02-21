@@ -14,69 +14,46 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-Auth _$AuthFromJson(Map<String, dynamic> json) {
-  return AuthEntity.fromJson(json);
+AuthEntity _$AuthEntityFromJson(Map<String, dynamic> json) {
+  return _AuthEntity.fromJson(json);
 }
 
 /// @nodoc
-mixin _$Auth {
+mixin _$AuthEntity {
   String get email => throw _privateConstructorUsedError;
   String get password => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String email, String password) entity,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String email, String password)? entity,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String email, String password)? entity,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthEntity value) entity,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthEntity value)? entity,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthEntity value)? entity,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+
+  /// Serializes this AuthEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $AuthCopyWith<Auth> get copyWith => throw _privateConstructorUsedError;
+
+  /// Create a copy of AuthEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $AuthEntityCopyWith<AuthEntity> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $AuthCopyWith<$Res> {
-  factory $AuthCopyWith(Auth value, $Res Function(Auth) then) =
-      _$AuthCopyWithImpl<$Res, Auth>;
+abstract class $AuthEntityCopyWith<$Res> {
+  factory $AuthEntityCopyWith(
+          AuthEntity value, $Res Function(AuthEntity) then) =
+      _$AuthEntityCopyWithImpl<$Res, AuthEntity>;
   @useResult
   $Res call({String email, String password});
 }
 
 /// @nodoc
-class _$AuthCopyWithImpl<$Res, $Val extends Auth>
-    implements $AuthCopyWith<$Res> {
-  _$AuthCopyWithImpl(this._value, this._then);
+class _$AuthEntityCopyWithImpl<$Res, $Val extends AuthEntity>
+    implements $AuthEntityCopyWith<$Res> {
+  _$AuthEntityCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AuthEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -97,7 +74,8 @@ class _$AuthCopyWithImpl<$Res, $Val extends Auth>
 }
 
 /// @nodoc
-abstract class _$$AuthEntityImplCopyWith<$Res> implements $AuthCopyWith<$Res> {
+abstract class _$$AuthEntityImplCopyWith<$Res>
+    implements $AuthEntityCopyWith<$Res> {
   factory _$$AuthEntityImplCopyWith(
           _$AuthEntityImpl value, $Res Function(_$AuthEntityImpl) then) =
       __$$AuthEntityImplCopyWithImpl<$Res>;
@@ -108,12 +86,14 @@ abstract class _$$AuthEntityImplCopyWith<$Res> implements $AuthCopyWith<$Res> {
 
 /// @nodoc
 class __$$AuthEntityImplCopyWithImpl<$Res>
-    extends _$AuthCopyWithImpl<$Res, _$AuthEntityImpl>
+    extends _$AuthEntityCopyWithImpl<$Res, _$AuthEntityImpl>
     implements _$$AuthEntityImplCopyWith<$Res> {
   __$$AuthEntityImplCopyWithImpl(
       _$AuthEntityImpl _value, $Res Function(_$AuthEntityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AuthEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -135,8 +115,8 @@ class __$$AuthEntityImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$AuthEntityImpl implements AuthEntity {
-  _$AuthEntityImpl({required this.email, required this.password});
+class _$AuthEntityImpl implements _AuthEntity {
+  const _$AuthEntityImpl({required this.email, required this.password});
 
   factory _$AuthEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$AuthEntityImplFromJson(json);
@@ -148,7 +128,7 @@ class _$AuthEntityImpl implements AuthEntity {
 
   @override
   String toString() {
-    return 'Auth.entity(email: $email, password: $password)';
+    return 'AuthEntity(email: $email, password: $password)';
   }
 
   @override
@@ -161,71 +141,17 @@ class _$AuthEntityImpl implements AuthEntity {
                 other.password == password));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, email, password);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuthEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AuthEntityImplCopyWith<_$AuthEntityImpl> get copyWith =>
       __$$AuthEntityImplCopyWithImpl<_$AuthEntityImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String email, String password) entity,
-  }) {
-    return entity(email, password);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String email, String password)? entity,
-  }) {
-    return entity?.call(email, password);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String email, String password)? entity,
-    required TResult orElse(),
-  }) {
-    if (entity != null) {
-      return entity(email, password);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(AuthEntity value) entity,
-  }) {
-    return entity(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(AuthEntity value)? entity,
-  }) {
-    return entity?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(AuthEntity value)? entity,
-    required TResult orElse(),
-  }) {
-    if (entity != null) {
-      return entity(this);
-    }
-    return orElse();
-  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -235,20 +161,23 @@ class _$AuthEntityImpl implements AuthEntity {
   }
 }
 
-abstract class AuthEntity implements Auth {
-  factory AuthEntity(
+abstract class _AuthEntity implements AuthEntity {
+  const factory _AuthEntity(
       {required final String email,
       required final String password}) = _$AuthEntityImpl;
 
-  factory AuthEntity.fromJson(Map<String, dynamic> json) =
+  factory _AuthEntity.fromJson(Map<String, dynamic> json) =
       _$AuthEntityImpl.fromJson;
 
   @override
   String get email;
   @override
   String get password;
+
+  /// Create a copy of AuthEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AuthEntityImplCopyWith<_$AuthEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

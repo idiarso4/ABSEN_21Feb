@@ -4,9 +4,11 @@ part 'auth.g.dart';
 part 'auth.freezed.dart';
 
 @freezed
-sealed class Auth with _$Auth {
-  factory Auth.entity({required String email, required String password}) =
-      AuthEntity;
+class AuthEntity with _$AuthEntity {
+  const factory AuthEntity({
+    required String email,
+    required String password,
+  }) = _AuthEntity;
 
-  factory Auth.fromJson(Map<String, Object> json) => _$AuthFromJson(json);
+  factory AuthEntity.fromJson(Map<String, dynamic> json) => _$AuthEntityFromJson(json);
 }

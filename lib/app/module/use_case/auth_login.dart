@@ -1,15 +1,22 @@
-import 'package:absen_smkn1_punggelan/app/module/repository/auth_repository.dart';
-import 'package:absen_smkn1_punggelan/core/network/data_state.dart';
-import 'package:absen_smkn1_punggelan/core/use_case/app_use_case.dart';
-import 'package:absen_smkn1_punggelan/app/module/entity/auth.dart';
+import '../entity/auth.dart';
+import '../../data/repository/auth_repository.dart';
+import '../../../core/network/data_state.dart';
 
-class AuthLoginUseCase extends AppUseCase<Future<DataState<void>>, AuthEntity> {
-  final AuthRepository _authRepository;
+class AuthLoginUseCase {
+  final AuthRepositoryImpl _authRepository;
 
   AuthLoginUseCase(this._authRepository);
 
-  @override
-  Future<DataState<void>> call({AuthEntity? param}) {
-    return _authRepository.login(param!);
+  Future<DataState<Map<String, dynamic>>> call({AuthEntity? param}) async {
+    try {
+      if (param == null) {
+        return DataState.error('Email dan password harus diisi');
+      }
+      
+      final response = await _authRepository.login(param);
+      return response;
+    } catch (e) {
+      return DataState.error(e.toString());
+    }
   }
 }

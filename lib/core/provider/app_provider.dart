@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
-abstract class AppProvider with ChangeNotifier {
+abstract class AppProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool _isDispose = false;
   String? _errorMessage;
@@ -10,9 +10,6 @@ abstract class AppProvider with ChangeNotifier {
   bool get isDispose => _isDispose;
   String? get errorMessage => _errorMessage;
   String get snackbarMessage => _snackbarMessage;
-
-  set errorMessage(String? param) => _errorMessage = param;
-  set snackbarMessage(String param) => _snackbarMessage = param;
 
   void showLoading() {
     _isLoading = true;
@@ -24,11 +21,20 @@ abstract class AppProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void init() {} 
+  void setError(String? message) {
+    _errorMessage = message;
+    notifyListeners();
+  }
+
+  void init() {
+    // Override this method to initialize provider
+  }
 
   @override
   void dispose() {
     _isDispose = true;
+    _isLoading = false;
+    _errorMessage = null;
     super.dispose();
   }
 }
