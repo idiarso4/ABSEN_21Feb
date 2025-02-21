@@ -17,12 +17,14 @@ class LoginNotifier extends AppProvider {
 
   bool _isLoged = false;
   bool _isShowPassword = false;
+  bool _isInitializing = true;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String? _errorMessage;
 
   bool get isLoged => _isLoged;
   bool get isShowPassword => _isShowPassword;
+  bool get isInitializing => _isInitializing;
   TextEditingController get emailController => _emailController;
   TextEditingController get passwordController => _passwordController;
 
@@ -41,7 +43,9 @@ class LoginNotifier extends AppProvider {
 
   Future<void> _checkAuth() async {
     try {
-      showLoading();
+      _isInitializing = true;
+      notifyListeners();
+
       final String? auth = await SharedPreferencesHelper.getString(PREF_AUTH);
       if (auth?.isNotEmpty ?? false) {
         _isLoged = true;
@@ -52,7 +56,7 @@ class LoginNotifier extends AppProvider {
       dev.log('Error checking auth: $e');
       _errorMessage = e.toString();
     } finally {
-      hideLoading();
+      _isInitializing = false;
       notifyListeners();
     }
   }
@@ -72,6 +76,7 @@ class LoginNotifier extends AppProvider {
 
       showLoading();
       _errorMessage = null;
+      notifyListeners();
       
       dev.log('Attempting login with email: ${_emailController.text}');
       
